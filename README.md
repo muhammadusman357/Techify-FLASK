@@ -50,5 +50,10 @@ A Flask-based e-commerce platform for computer accessories with complete user an
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/Techify-Ecommerce-Platform.git
+   git clone https://github.com/yourusername/Techify-FLASK.git
    cd Techify-Ecommerce-Platform
+   Create and activate virtual environment
+   Install dependencies: pip install -r requirements.txt
+   Start development server: flask run
+
+
