@@ -1,0 +1,141 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Submit Return Request
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root {
+            --color-primary: #7380ec;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .form-group img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .form-group .product-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .form-group .product-info img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .form-group .product-info .details {
+            flex: 1;
+        }
+        .form-group .product-info .details h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        .form-group .product-info .details p {
+            font-size: 16px;
+            color: #6b7280;
+            margin: 5px 0 0;
+        }
+        .form-group .product-info .details .price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #10b981;
+        }
+        .form-group button {
+            background-color: var(--color-primary);
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .form-group button:hover {
+            background-color: #000000;
+        }
+  </style>
+ </head>
+ <body>
+  <div class="container">
+   <div class="header">
+    <h1>
+     Submit Return Request
+    </h1>
+   </div>
+   <form method="post">
+    <div class="form-group">
+     <label>
+      Product
+     </label>
+     <div class="product-info">
+      <img src="{{ item.product.images[0].image_url }}" alt="{{ item.product.name }}" />
+      <div class="details">
+       <h2>
+        {{ item.product.name }}
+       </h2>
+       <p class="price">
+        Price: {{ item.price_at_purchase }}
+       </p>
+      </div>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="reason">
+      Reason for Returning
+     </label>
+     <textarea id="reason" name="reason" required rows="4"></textarea>
+    </div>
+    <div class="form-group">
+     <button type="submit">
+      Submit Return Request
+     </button>
+    </div>
+   </form>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,325 @@
+{%  extends '/customer/c-dashboard/user-dashboard-base.html' %}
+
+{% block option1 %}
+{% endblock %}
+
+{% block title %}
+{{selected}}
+{% endblock %}
+
+{% block content %}
+<div class="admincard">
+    <div class="admin">
+        <h1>Account Details</h1>
+    </div>
+    <div class="admincard2">
+        <div id="error-message" class="error-message"></div>
+        <form id="adminForm" method="POST" action="/customer-info">
+            <h6 class="heading-small text-muted mb-4">User information</h6>
+            <div class="form-group">
+                <div class="form-group-half">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="{{ user.username }}"
+                        placeholder="Enter Username" required>
+                    <span class="username-icon"></span> <!-- Icon placeholder -->
+                    <span id="error_message3" class="danger"></span> <!-- Username error message placeholder -->
+                    {% if error_message3 %}<span id="error_message3" class="danger">* {{ error_message3 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group-half">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" placeholder="Enter Email"
+                        required>
+                    <span class="email-icon"></span> <!-- Icon placeholder -->
+                    <span id="error_message2" class="danger"></span> <!-- Error message placeholder -->
+                    {% if error_message2 %}<span id="error_message2" class="danger">* {{ error_message2 }}</span>{% endif %}
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="form-group-half">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required
+                        placeholder="Enter first name">
+                </div>
+                <div class="form-group-half">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}"
+                        placeholder="Enter last name" required>
+                </div>
+            </div>
+            <div class="line"></div>
+            <h6 class="heading-small text-muted mb-4">Password</h6>
+            <div class="form-group">
+                <div class="form-group-half">
+                    <label for="password"> Current Password</label>
+                    <div class="password-container">
+                        <input type="password" id="currentpassword" name="currentpassword"
+                            placeholder="Enter current Password">
+                        <span class="password-toggle-icon" onclick="togglePasswordVisibility('currentpassword')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                        
+                    </div>
+                    {% if mismatch_error2 %}<span class="danger">* {{ mismatch_error2 }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group-half">
+                    <label for="password">New Password</label>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" placeholder="Password" 
+                            oninput="checkPasswordStrength()">
+                        <span class="password-toggle-icon" onclick="togglePasswordVisibility('password')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                    <div class="validator">
+                        <!-- Wrapper for strength bar -->
+                        <div class="strength-wrapper">
+                            <div id="strengthBar" class="strength-bar"></div> <!-- Filled strength bar -->
+                            <div class="empty-bar"></div> <!-- Background empty bar -->
+                        </div>
+
+                        <div id="strengthLabel" class="strength-label"></div>
+                        <p id="capital">
+                            <i class="fas fa-times"></i>
+                            <i class="fas fa-check"></i><span>Upper Case</span>
+                        </p>
+                        <p id="special-char">
+                            <i class="fas fa-times"></i>
+                            <i class="fas fa-check"></i><span>Special Character</span>
+                        </p>
+                        <p id="number">
+                            <i class="fas fa-times"></i>
+                            <i class="fas fa-check"></i><span>Number</span>
+                        </p>
+                        <p id="more-than-8">
+                            <i class="fas fa-times"></i>
+                            <i class="fas fa-check"></i><span>More than 8 characters</span>
+                        </p>
+                    </div>
+
+                    <div id="strengthBar" class="strength-bar"></div>
+                    <div id="strengthLabel" class="strength-label"></div>
+                </div>
+                <div class="form-group-half">
+                    <label for="confpassword">Confirm Password</label>
+                    <div class="password-container">
+                        <input type="password" id="confpassword" name="confpassword" placeholder="Confirm password"
+                             oninput="comparePasswords()">
+                        <span class="password-toggle-icon" onclick="togglePasswordVisibility('confpassword')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                        <div id="confirmMessage" class="danger"></div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="line"></div>
+            <h6 class="heading-small text-muted mb-4">Details</h6>
+            <div class="form-group">
+                <div class="form-group-half">
+                    <label for="phone_number">Phone</label>
+                    <input type="text" id="phone_number" name="phone_number" value="{{ user.phone_number }}" required
+                        placeholder="Enter Phone Number">
+                </div>
+                <div class="form-group-half">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="male" {% if user.gender=='male' %}selected{% endif %}>Male</option>
+                        <option value="female" {% if user.gender=='female' %}selected{% endif %}>Female</option>
+                        <option value="other" {% if user.gender=='other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                
+            </div>
+            <br>
+            <button class="btn btn-back" type="button" onclick="history.back()">
+                Back
+            </button>
+            <button class="btn" type="submit">
+                Save Details
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+
+<script>
+    let email2 = "{{ user.email }}"; // Previous email from backend
+    let username2 = "{{ user.username }}"; // Previous username from backend
+
+    let input1 = document.getElementById("email");
+    let input2 = document.getElementById("username");
+
+    let emailIcon = document.querySelector(".email-icon");
+    let usernameIcon = document.querySelector(".username-icon");
+
+    let pattern = /^[^]+@[^]+\.[a-z]{2,3}$/;
+
+    // Email validation
+    input1.addEventListener("input", validateEmail);
+
+    function validateEmail() {
+        let emailInput = input1.value;
+
+        // Reset error message
+        document.getElementById("error_message2").textContent = "";
+
+        if (emailInput.match(pattern) && emailInput !== email2) {
+            checkEmailExists(emailInput);
+        } else if (!emailInput.match(pattern)) {
+            input1.classList.add("invalid");
+            input1.classList.remove("valid");
+            emailIcon.className = "email-icon invalid";
+            document.getElementById("error_message2").textContent = "* Invalid email format.";
+        } else {
+            input1.classList.remove("invalid");
+            emailIcon.className = "email-icon valid";
+            if (emailInput === email2) {
+                document.getElementById("error_message2").textContent = "* This email is unchanged.";
+            }
+        }
+    }
+
+    // Username validation
+    input2.addEventListener("input", validateUsername);
+
+    function validateUsername() {
+        let usernameInput = input2.value;
+
+        // Reset error message
+        document.getElementById("error_message3").textContent = "";
+
+        if (usernameInput && usernameInput !== username2) {
+            checkUsernameExists(usernameInput);
+        } else if (usernameInput.length === 0) {
+            input2.classList.add("invalid");
+            input2.classList.remove("valid");
+            usernameIcon.className = "username-icon invalid";
+            document.getElementById("error_message3").textContent = "* Username cannot be empty.";
+        } else {
+            input2.classList.remove("invalid");
+            usernameIcon.className = "username-icon valid";
+            if (usernameInput === username2) {
+                document.getElementById("error_message3").textContent = "* This username is unchanged.";
+            }
+        }
+    }
+
+    // Function to check if email exists in the backend
+    function checkEmailExists(emailInput) {
+        fetch(`{{ url_for('check_email_exists') }}?email=${encodeURIComponent(emailInput)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    input1.classList.add("invalid");
+                    input1.classList.remove("valid");
+                    emailIcon.className = "email-icon invalid";
+                    document.getElementById("error_message2").textContent = "* An account with this email address already exists";
+                } else {
+                    input1.classList.add("valid");
+                    input1.classList.remove("invalid");
+                    emailIcon.className = "email-icon valid";
+                    document.getElementById("error_message2").textContent = "";
+                }
+            })
+            .catch(error => console.error("Error checking email:", error));
+    }
+
+    // Function to check if username exists in the backend
+    function checkUsernameExists(usernameInput) {
+        fetch(`{{ url_for('check_username_exists') }}?username=${encodeURIComponent(usernameInput)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    input2.classList.add("invalid");
+                    input2.classList.remove("valid");
+                    usernameIcon.className = "username-icon invalid";
+                    document.getElementById("error_message3").textContent = "* Username already taken.";
+                } else {
+                    input2.classList.add("valid");
+                    input2.classList.remove("invalid");
+                    usernameIcon.className = "username-icon valid";
+                    document.getElementById("error_message3").textContent = "";
+                }
+            })
+            .catch(error => console.error("Error checking username:", error));
+    }
+</script>
+
+{% endblock %}
+
+{% block content2 %}
+
+<div class="profile-card">
+    <div class="header">
+    </div>
+    <div class="avatar">
+        {% if user.profile_pic %}   
+            <img src="{{ user.profile_pic }}" alt="{{ user.username }}">
+        {% else %}
+            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="{{ user.username }}">
+        {% endif %}
+    </div>
+    <div class="buttons">
+        <button class="btn connect">
+            Connect
+        </button>
+        
+        <button class="btn message">
+            Message
+        </button>
+    </div>
+    <div class="stats">
+        <div class="stat">
+            <div class="number">
+                22
+            </div>
+            <div class="label">
+                Friends
+            </div>
+        </div>
+        <div class="stat">
+            <div class="number">
+                10
+            </div>
+            <div class="label">
+                Photos
+            </div>
+        </div>
+        <div class="stat">
+            <div class="number">
+                89
+            </div>
+            <div class="label">
+                Comments
+            </div>
+        </div>
+    </div>
+    <div class="info">
+        <div class="name">
+            {{ user.first_name }} {{ user.last_name }}
+        </div>
+        <div class="location">
+            Bucharest, Romania
+        </div>
+        <div class="position">
+            {{ user.role | replace('_',' ') | title }}
+        </div>
+    </div>
+    <div class="bio">
+        {% set words = user.email.split() %}
+        {% if words | length > 10 %}
+            {{ words[:10] | join(' ') }}...
+            <span class="show-more" data-description="{{ user.email | e }}">Show more</span>
+        {% else %}
+            {{ user.email }}
+        {% endif %}
+    </div>
+    
+</div>
+
+{% endblock %}

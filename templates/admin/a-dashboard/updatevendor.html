@@ -1,0 +1,74 @@
+{%  extends '/admin/a-dashboard/base_sidebar.html' %}
+{% block head %}
+{% endblock %}
+
+{% block title %}
+{{ selected }}
+{% endblock %}
+
+{% block content %}
+<div class="vendors">
+  <h1>Update Vendor</h1>
+  <form method="POST" action="{{ url_for('updatevendor', vendor_id=vendor.vendor_id) }}">
+
+    <!-- Hidden input to hold the vendor ID -->
+    <input type="hidden" name="vendor_id" value="{{ vendor.vendor_id }}">
+
+    <div class="form-group">
+      <div class="form-group-half">
+        <label for="name">Vendor Name</label>
+        <input id="name" name="name" type="text" value="{{ vendor.name }}" required />
+      </div>
+      <div class="form-group-half">
+        <label for="email">Email</label>
+        <input id="email" name="contact_email" type="email" value="{{ vendor.contact_email }}" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-group-half">
+        <label for="phone">Phone Number</label>
+        <input id="phone" name="phone_number" type="text" pattern="\d{11}" maxlength="11" required value="{{ vendor.phone_number }}" title="Phone number must be exactly 11 digits." />
+      </div>
+      <div class="form-group-half">
+        <label for="address">Address</label>
+        <textarea id="address" name="address" required>{{ vendor.address }}</textarea>
+      </div>
+    </div>
+
+    <button class="btn btn-back" type="button" onclick="history.back()">Back</button>
+    <button class="btn" type="submit">Update Vendor</button>
+  </form>
+</div>
+
+<script>
+    document.querySelector("#updateVendorForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(this);
+    const categoryId = this.getAttribute("data-vendor-id"); // Get category ID from the form
+
+    fetch(`/updatevendor/${categoryId}`, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message); // Show success message
+            console.log("Updated Vendor:", data.category); // Log updated category
+            window.location.href = "/vendors"; // Redirect to categories.html
+        } else {
+            alert(data.message); // Show error message
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An unexpected error occurred.");
+    });
+});
+</script>
+{% endblock %}
+
+{% block content2 %}
+{% endblock %}

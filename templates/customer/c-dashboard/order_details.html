@@ -1,0 +1,44 @@
+{% extends 'home-base.html' %}
+
+{% block meta %} {% endblock %}
+    
+{% block title %} Techify {% endblock %}  
+{% block back1 %}{% endblock %}
+{% block back2 %}{% endblock %}
+
+
+{%  block container1 %}
+{% endblock %}
+
+{% block content %}
+<div class="orders-container">
+    <div class="container-header">
+        <h1>Order Details</h1>
+        <p>Order ID: {{ order_details.order_id }}</p>
+        <p>Order Date: {{ order_details.created_at }}</p>
+        <p>Status: {{ order_details.status }}</p>
+        <p>Total Price: ${{ order_details.total_price }}</p>
+    </div>
+    <div class="content" id="all">
+        <h2>Items in Order:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_details.order_items %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price_at_purchase * item.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

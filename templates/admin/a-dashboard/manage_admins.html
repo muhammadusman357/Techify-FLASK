@@ -1,0 +1,157 @@
+{%  extends '/admin/a-dashboard/base_sidebar.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block title %}
+{{ selected }}
+{% endblock %}
+
+{% block content %}
+<div class="products">
+    <div class="table-header">
+        <span>
+            <h1 class="rec">Admins</h1>
+        </span>
+        <div class="tablecontainer">
+            <a href="/add_admin">Add Admin</a>
+            <div class="search-products">
+                <i class="fas fa-arrow-up" id="toggleArrow"></i>
+                <div id="searchDropdown" class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-criteria="username">Username</a>
+                    <a href="#" class="dropdown-item" data-criteria="email">Email</a>
+                    <a href="#" class="dropdown-item" data-criteria="role">Role</a>
+                </div>
+                <input  type="text"  id="searchAdmins"  placeholder="{{ criteria | capitalize }}: Search Admins" value="{{ request.args.get('search', '') }}">
+            </div>
+            
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="adminTableBody">
+            {% for admin in admins %}
+            <tr>
+                <td>
+                    {% if admin.profile_pic %}
+                    <div class="prof-pic" onclick="showPopup1('{{ admin.profile_pic }}', '{{ admin.username }}', 'admin')">
+                        <img src="{{ admin.profile_pic }}" alt="{{ admin.username }}" class="product-photo">
+                    </div>
+                    {% else %}
+                    <div class="prof-pic" onclick="showPopup1('{{ admin.profile_pic }}', '{{ admin.username }}', 'admin')"><span class="material-symbols-outlined">person</span></div>
+                    {% endif %}
+                    
+                </td>
+                <td>{{ admin.username }}</td>
+                <td>{{ admin.email }}</td>
+                <td>{{ admin.role | replace('_',' ') | title }}</td>
+                <td>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle">
+                            <span class="material-symbols-outlined" onclick="toggleDropdown(event)">more_horiz</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item"><span class="material-symbols-outlined">account_box</span>View</a>
+                            <a href="{{ url_for('edit_admin', admin_id=admin.admin_id) }}" class="dropdown-item"><span class="material-symbols-outlined">edit_square</span>Edit</a>
+                            <a href="{{ url_for('delete_admin', admin_id=admin.admin_id) }}" class="dropdown-item"><span class="material-symbols-outlined">delete</span>Delete</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="overlay" onclick="hidePopup()"></div>
+<div class="popup1" id="popup1">
+    <span class="close-btn2" onclick="hidePopup()">&times;</span>
+    <img id="popupImage" src="" alt="" class="product-photo">
+    <p id="popupUsername" class="popup-username"></p>
+</div>
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="javascript:void(0);" onclick="goToPage1('{{ page - 1 }}')" id="prevPage"><span class="material-symbols-outlined" >chevron_left</span></a>
+        {% else %}
+            <span class="disabled-next material-symbols-outlined" >chevron_left</span>
+        {% endif %}
+        {% for i in range(1, total_pages + 1) %}
+            {% if i == page %}
+                <span class="current-page">{{ i }}</span>
+            {% else %}
+                <a href="javascript:void(0);" onclick="goToPage1('{{ i }}')" class="page-link">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page < total_pages %}
+            <a href="javascript:void(0);" onclick="goToPage1('{{ page + 1 }}')" id="nextPage"><span class="material-symbols-outlined">chevron_right</span></a>
+            {% else %}
+            <span class="disabled-next material-symbols-outlined">chevron_right</span>
+        {% endif %}
+    </div>
+    
+    
+</div>
+
+
+
+<script>
+
+        const toggleArrow = document.getElementById('toggleArrow');
+        const searchDropdown = document.getElementById('searchDropdown');
+        const searchInput = document.getElementById('searchAdmins');
+        let selectedCriteria = 'username'; // Default search criteria
+
+        // Toggle the arrow icon and dropdown menu
+        toggleArrow.addEventListener('click', function() {
+            toggleArrow.classList.toggle('down-arrow');
+            searchDropdown.style.display = searchDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Set selected criteria and update placeholder
+        document.querySelectorAll('#searchDropdown .dropdown-item').forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                selectedCriteria = this.getAttribute('data-criteria');
+                searchInput.placeholder = `${selectedCriteria.charAt(0).toUpperCase() + selectedCriteria.slice(1)}: Search...`;
+                searchDropdown.style.display = 'none';
+                toggleArrow.classList.remove('down-arrow');
+            });
+        });
+
+        // Trigger search on Enter key with selected criteria
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                goToPage1(1);
+                event.preventDefault();
+            }
+        });
+
+        
+
+
+    // Modify goToPage1 to include selected criteria in the URL
+    function goToPage1(page) {
+        const searchQuery = document.getElementById('searchAdmins').value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', page);
+        url.searchParams.set('search', searchQuery);
+        url.searchParams.set('criteria', selectedCriteria);
+        window.location.assign(url.toString());  // Use assign to reload the page with the new parameters
+    }
+</script>
+
+
+{% endblock %}
+
+{% block content2 %}
+
+<!-- Any additional content can be added here if needed -->
+{% endblock %}

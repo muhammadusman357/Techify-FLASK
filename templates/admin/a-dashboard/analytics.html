@@ -1,0 +1,121 @@
+{% extends '/admin/a-dashboard/base_sidebar.html' %}
+
+{% block title %}
+    Analytics Dashboard
+{% endblock %}
+
+{% block content %}
+<div class = "products" > 
+    <div class="container" style="display: flex; flex-direction: row; justify-content: space-between;">
+        <!-- Sales Summary Line Chart -->
+        <div class="chart-container" style="flex: 1; height: 500px; max-width: 90%; margin-right: 20px;">
+            <canvas id="salesChart"></canvas>
+        </div>
+
+        <!-- Additional Metrics -->
+        <div class="metrics-container" style="flex: 0 0 30%; max-width: 30%; padding: 10px;">
+            <div class="metric">
+                <h4>Total Number of Orders</h4>
+                <p id="total-orders">{{ total_orders }}</p>
+            </div>
+            <div class="metric">
+                <h4>Average Orders per Day</h4>
+                <p id="avg-orders-day">{{ avg_orders_per_day | round(2) }}</p>
+            </div>
+            <div class="metric">
+                <h4>Average Sales per Order</h4>
+                <p id="avg-order-value">{{ (sales|sum / orders|sum) if orders|sum != 0 else 0 }}</p>
+            </div>
+            <div class="metric">
+                <h4>Profit Margin</h4>
+                <p id="profit-margin">
+                    {% if income|sum != 0 %}
+                        {{ ((income|sum - expenses|sum) / income|sum) * 100 }} %
+                    {% else %}
+                        0%
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var salesData = JSON.parse('{{ sales|tojson }}');
+        var expensesData = JSON.parse('{{ expenses|tojson }}');
+        var incomeData = JSON.parse('{{ income|tojson }}');
+        var datesData = JSON.parse('{{ dates|tojson }}');
+        var ordersData = JSON.parse('{{ orders|tojson }}');
+        
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: datesData,
+                datasets: [
+                    {
+                        label: 'Total Sales',
+                        data: salesData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                    },
+                    {
+                        label: 'Total Expenses',
+                        data: expensesData,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        fill: true,
+                    },
+                    {
+                        label: 'Total Income',
+                        data: incomeData,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        fill: true,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+ <style>
+ 
+    /* Make the chart container bigger */
+    .chart-container {
+        width: 100%;   /* Make the chart take the full width of the parent container */
+        height: 500px; /* Set a fixed height for the chart */
+    }
+
+    /* Make the canvas inside the chart container take the full width and height */
+    #salesChart {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* Adjust the font size of the side details */
+    .metrics-container .metric {
+        margin-top: 20px;
+        font-size: 1.5rem;  /* Increase font size for better visibility */
+    }
+
+    .metrics-container .metric h4 {
+        font-size: 1.25rem; /* Increase heading font size */
+    }
+
+    .metrics-container .metric p {
+        font-size: 1.5rem;  /* Increase text size for the numbers */
+    }
+</style>  
+{% endblock %}

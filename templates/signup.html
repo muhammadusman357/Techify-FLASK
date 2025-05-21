@@ -1,0 +1,182 @@
+
+
+{%  extends 'home-base.html' %}
+{% block title %} Signup {% endblock %}
+{% block content %}
+
+
+<div id="error-message" class="error-message"></div>
+<div class="login-container login-container2">
+    <div class="login-header">
+        
+        <h1>Create Account </h1>
+    </div>
+    
+    <form class="forms" method="POST">
+        
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter Username" value="{{ request.form.get('username', '') }}" required>
+            <span id="error_message3" class="danger">{{ error_message3 }}</span>
+        </div>
+        
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter Email" value="{{ request.form.get('email', '') }}" required>
+            <span id="error_message2" class="danger">{{ error_message2 }}</span>
+        </div>
+        
+        
+        
+    
+
+        <div class="input-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" required placeholder="Enter First Name">
+        </div>
+        <div class="input-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" required placeholder="Enter Last Name">
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Password" name="password">
+            <i class="fas fa-eye password-icon" id="togglePassword"></i>
+        </div>
+
+        <div class="input-group">
+            <label for="confpassword">Confirm Password</label>
+            <input type="password" id="confpassword" placeholder="Confirm Password" name="confpassword">
+            <i class="fas fa-eye password-icon" id="toggleConfPassword"></i>
+            <div id="confirmMessage" class="danger"></div>
+        </div>
+        <div class="input-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="date">Date Of Birth</label>
+                <div class="dob">
+                    <input type="date" name="dob" placeholder="DOB" required>
+                </div>
+                <span id="error_message4" class="danger"></span>
+            </div>
+        <p> By creating an account you agree with our terms of service, privacy policy</p>
+        <button type="submit" class="login-btn"> Create account </button>
+    </form>
+    
+    <p class="signup-text">Already have an account? <a href="{{ url_for('userlogin') }}">Log in</a></p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('signup-form');
+        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const dobInput = document.getElementById('dob');
+        
+
+        // Clear backend error messages when AJAX validation runs
+        const clearBackendErrors = () => {
+            document.getElementById('error_message3').textContent = "";
+            document.getElementById('error_message2').textContent = "";
+            document.getElementById('error_message4').textContent = "";
+        };
+
+        // Username AJAX validation
+        usernameInput.addEventListener('input', () => {
+            clearBackendErrors();
+            const username = usernameInput.value;
+            fetch(`/validate_username?username=${encodeURIComponent(username)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const errorSpan = document.getElementById('error_message3');
+                    if (data.exists) {
+                        errorSpan.textContent = "* Username already taken.";
+                        usernameInput.classList.add('invalid');
+                    } else {
+                        errorSpan.textContent = "";
+                        usernameInput.classList.remove('invalid');
+                        usernameInput.classList.add('valid');
+                    }
+                    
+                })
+                .catch(console.error);
+        });
+        // Email validation function
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation pattern
+    return emailRegex.test(email);
+}
+
+// Email AJAX validation
+emailInput.addEventListener('input', () => {
+    clearBackendErrors();
+    const email = emailInput.value;
+    const errorSpan = document.getElementById('error_message2');
+
+    // Reset previous error message
+    errorSpan.textContent = "";
+    emailInput.classList.remove('invalid', 'valid');
+
+    // Check email format
+    if (!isValidEmail(email)) {
+        errorSpan.textContent = "* Invalid email format.";
+        emailInput.classList.add('invalid');
+        return; // Stop further execution if email is invalid
+    }
+
+    // Perform AJAX validation
+    fetch(`/validate_email?email=${encodeURIComponent(email)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.exists) {
+                errorSpan.textContent = "* Email already exists.";
+                emailInput.classList.add('invalid');
+            } else {
+                errorSpan.textContent = ""; // Clear error message
+                emailInput.classList.add('valid'); // Mark input as valid
+            }
+        })
+        .catch(error => {
+            console.error('Error during email validation:', error);
+        });
+});
+
+
+        // Date of Birth AJAX validation
+        dobInput.addEventListener('input', () => {
+            clearBackendErrors();
+            const dob = dobInput.value;
+            fetch(`/validate_dob?dob=${encodeURIComponent(dob)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const errorSpan = document.getElementById('error_message4');
+                    if (!data.valid) {
+                        errorSpan.textContent = "* Invalid date format. Use YYYY-MM-DD.";
+                    } else {
+                        errorSpan.textContent = "";
+                    }
+                })
+                .catch(console.error);
+        });
+
+        
+
+        // Prevent double error display on form submission
+        form.addEventListener('submit', (event) => {
+            clearBackendErrors();
+        });
+
+
+        
+    });
+</script>
+
+
+{% endblock %}
+

@@ -1,0 +1,691 @@
+{%  extends 'home-base.html' %}
+
+
+
+{% block meta %}
+
+
+
+
+
+{% endblock %}
+    
+{% block title %}
+     Techify
+{% endblock %}  
+{% block back1 %}<div class="container1">{% endblock %}
+{% block back2 %}</div>{% endblock %}
+
+
+{%  block container1 %}
+    
+    <div class="carousel">
+        <div class="list">
+            {% for product in slider %}
+            <div class="item">
+                <div class="introduce">
+                    <div class="title">{{ product.name.split('|')[0].split('(')[0] }}</div>
+
+
+                    <div class="topic">{{ product.category.name }}</div> <!-- Category Name -->
+                    <div class="des">{{ product.description }}</div>
+                    <button class="seeMore">See More</button>
+                </div>
+                <!-- Image Carousel (First Image in Carousel) -->
+                <div class="image-carousel">
+                    {% if product_images[product.product_id] %}
+                        <img src="{{ product_images[product.product_id][0] }}" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+                <div class="detail">
+                    <div class="title">{{ product.name }}</div>
+                    <div class="des">{{ product.description }}</div>
+                    <br>
+                    <div class="checkout">
+                        <button class="confirm-btn" data-id="{{ product.product_id }}">Add to Cart</button>
+                        <div class="quantity-popup" id="popup-{{ product.product_id }}" >
+                            <input type="number" id="quantity-input-{{ product.product_id }}" value="1" min="1" /> 
+                        </div>
+                        <button>Buy Now</button>
+                        
+                    
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="arrows">
+            <button id="prev">&lt;</button>
+            <button id="next">&gt;</button>
+        </div>
+        <button id="back">Back</button>
+    </div>
+
+
+{% endblock %}
+
+{% block content %}
+<div class="heading1">
+    <span>TOP</span> CATEGORIES
+</div>
+<div class="card-container">
+    <a href="/cases" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-6.jpg')}}" alt="Casing">
+            <div class="card-text">
+                <p>Casing</p>
+                <span class="product-count">20 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/Headsets" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-3.jpg')}}" alt="Headphones">
+            <div class="card-text">
+                <p>Headphones</p>
+                <span class="product-count">15 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/keyboards" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-1.jpg')}}" alt="Keyboard">
+            <div class="card-text">
+                <p>Keyboard</p>
+                <span class="product-count">10 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/motherboards" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-2.jpg')}}" alt="Motherboard">
+            <div class="card-text">
+                <p>Motherboard</p>
+                <span class="product-count">8 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/mouse" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-5.jpg')}}" alt="Mouse">
+            <div class="card-text">
+                <p>Mouse</p>
+                <span class="product-count">12 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/mousepads" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-4.jpg')}}" alt="Mouse Pad">
+            <div class="card-text">
+                <p>Mouse Pad</p>
+                <span class="product-count">5 Products</span>
+            </div>
+        </div>
+    </a>
+</div>
+<!-- end of categories -->
+
+<div class="price-container">
+    <div class="card">
+        <img alt="Image of GeForce RTX 3060Ti graphics card" height="300"
+            src="https://storage.googleapis.com/a1aa/image/w9E93e6OmV38fkzfffH7yRTMfcTS9vLf3KJRjjedQPjenLShnA.jpg"
+            width="600" />
+        <div class="card-content">
+            <p>
+                THE ULTIMATE PLAY
+            </p>
+            <h2>
+                GEFORCE RTX 3060TI
+            </h2>
+            <p class="price">
+                $599.99
+            </p>
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+    <div class="card">
+        <img alt="Image of AORUS ELITE AX AM5 motherboard" height="300"
+            src="https://storage.googleapis.com/a1aa/image/mIEnERJrVNr3CVxFNWMFeNqUqx21mC0ooQ0aUeSdCOoyFpwTA.jpg"
+            width="600" />
+        <div class="card-content">
+            <p>
+                POWER TO THE CORE
+            </p>
+            <h2>
+                AORUS ELITE AX AM5
+            </h2>
+            <p class="price">
+                $199.99
+            </p>
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+</div>
+
+<!-- Start of top-selling -->
+<div class="top-selling">
+    <div class="header">
+        <h1>
+            <span>BEST</span> SELLERS
+        </h1>
+        <div class="nav">
+            <!-- Navigation Buttons with IDs for easy targeting -->
+            <button id="cpus-btn" class="active">CPUs</button>
+            <button id="gpus-btn">Graphics Cards</button>
+            <button id="ram-btn">Memory</button>
+            <button id="monitors-btn">Monitors</button>
+        </div>
+        <a class="view-more" href="/categories">
+            View More
+            <i class="fas fa-chevron-right danger"></i>
+        </a>
+    </div>
+
+    <div class="products">
+        <!-- Dynamic Product Display -->
+        <div class="products-display slick-slider">
+            <!-- Products will be dynamically populated using JavaScript -->
+            <div class="loading">Loading products...</div>
+        </div>
+    </div>
+
+    <!-- Pagination Section -->
+    <div class="pagination">
+        <!-- Pagination with arrows and page numbers will be dynamically populated here -->
+    </div>
+    
+</div>
+<!-- End of top-selling -->
+
+
+
+<section class="section section-logo">
+    <div class="line-container">
+        <div class="line2" aria-hidden="true"></div> <!-- Decorative element -->
+    </div>
+    <div class="container01">
+        <div class="flex-container">
+            <div class="section-header text-left">
+                <div class="title-header">
+                    <span>SHOP BY </span><br>POPULAR<br> BRANDS
+                </div>
+            </div>
+            <div class="logo-box">
+                <div class="scroller">
+                    <div class="scroller__inner">
+                        <div class="ap-logolist ap-logolist--carousel" role="region" aria-label="Popular Brands Carousel">
+                            <div class="ap-logolist__list">
+                                <!-- First loop for vendors -->
+                                {% for vendor in vendors %}
+                                    <div class="ap-logolist__item">
+                                        <a href="#">
+                                            <img src="{{ url_for('static', filename='images/vendors/' + vendor.name + '.svg') }}" alt="{{ vendor.name }}" class="ap-logolist__image" loading="lazy">
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                                <!-- Duplicated loop for infinite effect -->
+                                {% for vendor in vendors %}
+                                    <div class="ap-logolist__item">
+                                        <a href="#">
+                                            <img src="{{ url_for('static', filename='images/vendors/' + vendor.name + '.svg') }}" alt="{{ vendor.name }}" class="ap-logolist__image" loading="lazy">
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="line-container">
+        <div class="line" aria-hidden="true"></div> <!-- Decorative element -->
+    </div>
+</section>
+
+
+
+
+
+<div class="new-price-container">
+    <div class="card">
+        
+        <img alt="X6 GAMING MOUSE" height="300"
+            src="{{url_for('static', filename = 'images/customer/headset/Mask_group_54_1.jpg')}}"
+            width="600" />
+        
+        <div class="card-content">
+            <h3 class="heading heading-title h6" reveal="">ERGONOMIC PRECISION</h3>
+            <h2 class="heading heading-center h3" reveal="">
+                <span>X6 GAMING 
+            <br>MOUSE</span>
+            </h2>
+            <p class="heading description red-price" reveal="">
+                <span>$49.99</span>   
+                <span></span>
+            </p>
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+    <div class="card2">
+        <img alt="Image of NXSYS AERO GAMING CHAIR" 
+            src="{{url_for('static', filename = 'images/customer/headset/Mask_group_55_1.jpg')}}"
+            />
+        <div class="card-content">
+            <h3 class="heading heading-title h6" reveal="">FUTURE PERFECT</h3>
+            <span class="mid">NXSYS AERO
+                <br>
+                GAMING CHAIR</span>
+        
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+    <div class="card">
+        <img alt="Image of AORUS ELITE AX AM5 motherboard" height="300"
+            src="{{url_for('static', filename = 'images/customer/headset/Mask_group_56_1.jpg')}}"
+            width="600" />
+        <div class="card-content">
+            <h3 class="heading heading-title h6" reveal="">VOLCANIC SOUND</h3>
+            <h2 class="heading heading-center h3" reveal="">
+                <span>E910 5.8G 
+            <br>Wireless <br>Headset</span>
+            </h2>
+            <p class="heading description green-price" reveal="">
+                <span>$69.99</span>   
+                <span></span>
+            </p>
+        
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+</div>
+<div class=" light-back">
+<section class="section section-logo">
+<div class="features">
+    <div class="feature-item">
+        <i><img src="{{url_for('static', filename = 'images/customer/transport.svg')}}" alt=""></i>
+        <h3>Worldwide Shipping</h3>
+        <p>Enjoy free delivery on every order.</p>
+    </div>
+    <div class="divider"></div>
+    <div class="feature-item">
+        <i><img src="{{url_for('static', filename = 'images/customer/money-back.svg')}}" alt=""></i>
+        <h3>Money-Back Guarantee</h3>
+        <p>30-day money back guarantee.</p>
+    </div>
+    <div class="divider"></div>
+    <div class="feature-item">
+        <i><img src="{{url_for('static', filename = 'images/customer/secure-pay.svg')}}" alt=""></i>
+        <h3>Secure Payments</h3>
+        <p>Secure checkout verified</p>
+    </div>
+    <div class="divider"></div>
+    <div class="feature-item">
+        <i><img src="{{url_for('static', filename = 'images/customer/helpline.svg')}}" alt=""></i>
+        <h3>Online Customer Service</h3>
+        <p>Call our expert <span class="danger" >(084) 123 - 456 88</span></p>
+    </div>
+    
+</div>
+<div class="line-container">
+    <div class="line"></div>
+</div>
+<br>
+<div class="customer-container">
+    <div class="customer-header">
+        <h1>CUSTOMER <span>REVIEW</span></h1>
+        <div class="rating-container">
+            <div class="rating">
+                4.8
+                <i><img src="{{url_for('static', filename = 'images/customer/ratings.svg')}}" alt=""></i>
+            </div>
+            <div class="reviews">
+                <a href="#">View All 7,185 Reviews</a>
+            </div>
+        </div>
+    </div>
+    <!-- Slider buttons -->
+    
+    
+    <div class="reviews-container">
+        <div class="slider-container">
+            <!-- Add your slider content here -->
+            <button class="slider-button left"><span class="material-symbols-outlined">arrow_back_ios</span></button>
+        </div>
+        
+        <div class="review-card">
+            <h2>Great keyboard!</h2>
+            <p>Love the way it feels! I've been using it for work. I feel like I type faster and more accurate because of the way the switches respond to my fingers. Great keyboard!</p>
+            <div class="rating">
+                <i><img src="{{url_for('static', filename = 'images/customer/ratings.svg')}}" alt=""></i>
+            </div>
+            <div class="author">
+                <div>
+                    Gregory D<br/>
+                    28 Jun 2023
+                </div>
+                <img src="https://storage.googleapis.com/a1aa/image/vYdcZLhfrWRuQqzbJjebA4Bf2ERmQd2fDHiuYhVvzFbeMTJeE.jpg" alt="Image of a colorful keyboard">
+            </div>
+        </div>
+        <div class="review-card">
+            <h2>Love the Sound</h2>
+            <p>These guys are top notch. Bought two PCs from them this year. They both arrived promptly and perfectly built and protected.</p>
+            <div class="rating">
+                <i><img src="{{url_for('static', filename = 'images/customer/ratings.svg')}}" alt=""></i>
+            </div>
+            <div class="author">
+                <div>
+                    Melvin N.<br/>
+                    28 Jun 2024
+                </div>
+                <img src="https://storage.googleapis.com/a1aa/image/q7lITrjrHhofIqPcNcbPry2ZuOHxCpOyydZFep1HA75pZKxTA.jpg" alt="Image of a headset">
+            </div>
+        </div>
+        
+        <div class="review-card">
+            <h2>Love the Sound</h2>
+            <p>These guys are top notch. Bought two PCs from them this year. They both arrived promptly and perfectly built and protected.</p>
+            <div class="rating">
+                <i><img src="{{url_for('static', filename = 'images/customer/ratings.svg')}}" alt=""></i>
+            </div>
+            <div class="author">
+                <div>
+                    Melvin N.<br/>
+                    28 Jun 2024
+                </div>
+                <img src="https://storage.googleapis.com/a1aa/image/q7lITrjrHhofIqPcNcbPry2ZuOHxCpOyydZFep1HA75pZKxTA.jpg" alt="Image of a headset">
+            </div>
+        </div>
+
+        <div class="slider-container">
+
+            <button class="slider-button right"><span class="material-symbols-outlined">arrow_forward_ios</span></button>
+        </div>
+
+    </div>
+</div>
+
+
+</section></div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const categories = {
+            cpus: 'CPUs',
+            gpus: 'Graphics Cards',
+            ram: 'Memory',
+            monitors: 'Monitors'
+        };
+    
+        let currentCategory = 'cpus';
+        let currentPage = 1;  // Default to page 1
+    
+        async function loadProducts(category, page = 1) {
+            try {
+                const response = await fetch(`/get-products?categories=${category}&page=${page}`);
+                const data = await response.json();
+        
+                if (response.ok) {
+                    const productsDisplay = document.querySelector('.products-display');
+                    productsDisplay.innerHTML = ''; // Clear existing products
+        
+                    if (data.products.length > 0) {
+                        data.products.forEach(product => {
+                            const mainImage = product.image_urls[0] || 'default-main.jpg';
+                            const hoverImage = product.image_urls[1] || 'default-hover.jpg';
+        
+                            const avgRating = product.avg_rating || 0;
+                            const fullStars = Math.floor(avgRating);
+                            const halfStar = avgRating % 1 >= 0.5 ? 1 : 0;
+                            const emptyStars = 5 - fullStars - halfStar;
+        
+                            let ratingHtml = '';
+                            for (let i = 0; i < fullStars; i++) ratingHtml += '&#9733;';
+                            if (halfStar) ratingHtml += '&#9732;';
+                            for (let i = 0; i < emptyStars; i++) ratingHtml += '&#9734;';
+        
+                            const stockStatus = product.stock > 0
+                                ? `
+                                    <div class="stock-in">In Stock</div>
+                                    <a href="javascript:void(0);">
+                                        <div class="stock-add add-to-cart" data-id="${product.id}">Add To Cart</div>
+                                    </a>
+                                    <div class="quantity-popup" id="popup-${product.id}" style="display: none;">
+                                        <div class="quantity-counter">
+                                            <button class="decrease-btn" data-id="${product.id}">-</button>
+                                            <input type="number" id="quantity-input-${product.id}" value="1" min="1" />
+                                            <button class="increase-btn" data-id="${product.id}">+</button>
+                                        </div>
+                                        <button class="confirm-btn" data-id="${product.id}">Confirm</button>
+                                    </div>
+                                `
+                                : `<div class="stock-out">Out Of Stock</div>`;
+        
+                            const productHtml = `
+                                <div class="product">
+                                    <div class="product-header">
+                                        <h2>${product.category.toUpperCase()}</h2>
+                                        <div class="icons">
+                                            <button class="wishlist-btn" data-product-id="${product['id']}"><span class="material-symbols-outlined">favorite</span></button>
+                                            <button><span class="material-symbols-outlined">cached</span></button>
+                                            <button onclick="window.location.href='/product_details/${product.id}'">
+                                                <span class="material-symbols-outlined gr">fullscreen</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="image-container">
+                                        <a href="/product_details/${product.id}">
+                                            <img alt="image-1" class="main-img" src="${mainImage}" />
+                                            <img alt="image-2" class="hover-img" src="${hoverImage}" />
+                                        </a>
+                                    </div>
+                                    <div class="discount">SAVE 58%</div>
+                                    <a href="/product_details/${product.id}">
+                                        <h3>${product.name}</h3>
+                                    </a>
+                                    <div class="reviews">
+                                        ${ratingHtml}
+                                        <span>(${avgRating} / 5)</span>
+                                    </div>
+                                    <div class="price-stock">
+                                        <div class="price">PKR ${product.price}</div>
+                                        ${stockStatus}
+                                    </div>
+                                </div>
+                            `;
+                            productsDisplay.innerHTML += productHtml;
+                        });
+        
+                        // Initialize cart interactions
+                        initializeCartLogic();
+        
+                        // Update pagination slider
+                        updatePaginationSlider(data.total_pages, data.current_page);
+                    } else {
+                        productsDisplay.innerHTML = '<div>No products found for the selected category.</div>';
+                    }
+                } else {
+                    console.error(data.message || 'Failed to load products.');
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+        
+        // Function to initialize cart interaction logic
+        function initializeCartLogic() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            const confirmButtons = document.querySelectorAll('.confirm-btn');
+        
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const productId = button.getAttribute('data-id');
+                    const popup = document.getElementById(`popup-${productId}`);
+                    popup.style.display = 'block';
+                });
+            });
+        
+            confirmButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const productId = button.getAttribute('data-id');
+                    const quantityInput = document.getElementById(`quantity-input-${productId}`);
+                    const quantity = parseInt(quantityInput.value) || 1;
+        
+                    // Hide the popup
+                    const popup = document.getElementById(`popup-${productId}`);
+                    popup.style.display = 'none';
+        
+                    // Perform the AJAX call to add the product to the cart
+                    try {
+                        const response = await fetch('/add_to_cart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ product_id: productId, quantity })
+                        });
+        
+                        const result = await response.json();
+                        if (response.ok) {
+                            updateCartUI(result.items, result.subtotal);
+                            fetchCartData();
+                            toggleCart();
+                        } else {
+                            alert(result.message || 'Failed to add product to cart.');
+                        }
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
+                        alert('An error occurred while adding the product to the cart.');
+                    }
+                });
+            });
+        
+            // Quantity controls
+            document.querySelectorAll('.decrease-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const productId = button.getAttribute('data-id');
+                    const quantityInput = document.getElementById(`quantity-input-${productId}`);
+                    const currentQuantity = parseInt(quantityInput.value) || 1;
+                    if (currentQuantity > 1) {
+                        quantityInput.value = currentQuantity - 1;
+                    }
+                });
+            });
+        
+            document.querySelectorAll('.increase-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const productId = button.getAttribute('data-id');
+                    const quantityInput = document.getElementById(`quantity-input-${productId}`);
+                    const currentQuantity = parseInt(quantityInput.value) || 1;
+                    quantityInput.value = currentQuantity + 1;
+                });
+            });
+        }
+        
+    
+        // Update pagination slider with dots and arrows
+        function updatePaginationSlider(totalPages, currentPage) {
+            const pagination = document.querySelector('.pagination');
+            pagination.innerHTML = ''; // Clear previous pagination controls
+    
+            const prevButton = document.createElement('button');
+            prevButton.classList.add('pagination-arrow');
+            prevButton.disabled = currentPage === 1;
+            prevButton.innerHTML = '<span class="material-symbols-outlined">chevron_left</span>';
+            prevButton.addEventListener('click', () => {
+                loadProducts(currentCategory, currentPage - 1);
+            });
+    
+            const nextButton = document.createElement('button');
+            nextButton.classList.add('pagination-arrow');
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.innerHTML = '<span class="material-symbols-outlined">chevron_right</span>';
+            nextButton.addEventListener('click', () => {
+                loadProducts(currentCategory, currentPage + 1);
+            });
+    
+            // Create dot buttons for each page
+            const dotsContainer = document.createElement('div');
+            dotsContainer.classList.add('pagination-dots1');
+    
+            for (let i = 1; i <= totalPages; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('pagination-dot1');
+                if (i === currentPage) {
+                    dot.classList.add('active');
+                }
+                dot.addEventListener('click', () => {
+                    loadProducts(currentCategory, i);
+                });
+                dotsContainer.appendChild(dot);
+            }
+    
+            // Add arrows and dot pagination to the container
+            pagination.appendChild(prevButton);
+            pagination.appendChild(dotsContainer);
+            pagination.appendChild(nextButton);
+        }
+    
+        // Category buttons event listeners
+        document.getElementById('cpus-btn').addEventListener('click', () => {
+            currentCategory = 'cpus';
+            loadProducts(currentCategory, 1);
+            updateActiveButton('cpus-btn');
+        });
+        document.getElementById('gpus-btn').addEventListener('click', () => {
+            currentCategory = 'gpus';
+            loadProducts(currentCategory, 1);
+            updateActiveButton('gpus-btn');
+        });
+        document.getElementById('ram-btn').addEventListener('click', () => {
+            currentCategory = 'ram';
+            loadProducts(currentCategory, 1);
+            updateActiveButton('ram-btn');
+        });
+        document.getElementById('monitors-btn').addEventListener('click', () => {
+            currentCategory = 'monitors';
+            loadProducts(currentCategory, 1);
+            updateActiveButton('monitors-btn');
+        });
+    
+        // Update active class for category buttons
+        function updateActiveButton(activeButtonId) {
+            document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(activeButtonId).classList.add('active');
+        }
+    
+        // Load the default category (CPUs) on page load
+        loadProducts(currentCategory, currentPage);
+    });
+    
+    
+    
+</script>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends '/customer/c-dashboard/user-dashboard-base.html' %}
+{% block title %}{{ selected.capitalize() }}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer/dashboard/customerorders.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<div class="reviews-container">
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('reviewed')">Reviewed</div>
+        <div class="tab" onclick="showTab('to_review')">To Review</div>
+    </div>
+    
+    <!-- Reviewed Tab -->
+    <div class="content" id="reviewed">
+            <table>
+                <thead>
+                    <tr>
+
+                        <th>#</th> <!-- Index Colum-->
+                        <th>Product Name</th> 
+                        <th>Description</th> 
+                        <th>Rating</th>
+                        <th>Review Text</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in orderdata %}
+                    <tr>
+                        <td>{{ loop.index }}</td> 
+                        <td>{{ item.product_name }}</td>                 
+                        <td>{{ item.product_description }}</td>
+                        <td>{{item.product_review}}</td>
+                        <td>{{item.product_review_text}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>    
+            </table>
+            <div class="pagination">
+                {% if orderdata.has_prev %}
+                    <a href="javascript:void(0);" onclick="goToPageMyReview('{{ orderdata.prev_num }}')"><span class="material-symbols-outlined" >chevron_left</span></a>
+                {% else %}
+                    <span class="disabled-next material-symbols-outlined" >chevron_left</span>
+                {% endif %}
+                {% for page_num in orderdata.iter_pages() %}
+                    {% if page_num == orderdata.page %}
+                        <span class="current-page">{{ page_num }}</span>
+                    {% else %}
+                        <a href="javascript:void(0);" onclick="goToPageMyReview('{{ page_num }}')">{{ page_num }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if orderdata.has_next %}
+                    <a href="javascript:void(0);" onclick="goToPageMyReview('{{ orderdata.next_num }}')"><span class="material-symbols-outlined" >chevron_right</span></a>
+                {% else %}
+                    <span class="disabled-next material-symbols-outlined" >chevron_right</span>
+                {% endif %}
+            </div>
+    </div>
+
+    <!-- To Review Tab -->
+    <div class="content" id="to_review" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th> <!-- Index Column -->
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Description</th>
+                    <th>Order ID</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Add Review</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in orderdata2 %}
+                <tr>
+                    <td>{{ loop.index }}</td> <!-- Index for each row -->
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.product_description }}</td>
+                    <td>{{item.order_id}}</td>
+                    <td>${{ item.price_at_purchase * item.quantity }}</td>
+                    <td>{{item.status}}</td>
+                    <td>
+                        <a href="/add_reviews/{{ item.product_id }}" class="details-link">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>    
+        </table>
+        
+    </div>
+
+</div>
+
+<script>
+    function showTab(tabId) {
+        // Remove active class from all tabs
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        // Hide all content sections
+        const contents = document.querySelectorAll('.content');
+        contents.forEach(content => content.style.display = 'none');
+
+        // Activate the selected tab and show corresponding content
+        document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        document.getElementById(tabId).style.display = 'block';
+    }
+
+    function goToPageMyReview(page) {
+        window.location.href = `/my_reviews?page=${page}`; 
+    }
+
+    // Modify goToPage1 to include selected criteria in the URL
+    function goToPage1(page) {
+        const searchQuery = document.getElementById('searchOrderss').value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', page);
+        url.searchParams.set('search', searchQuery);
+        url.searchParams.set('criteria', selectedCriteria);
+        window.location.assign(url.toString());  // Use assign to reload the page with the new parameters
+    }
+</script>
+
+{% endblock %}

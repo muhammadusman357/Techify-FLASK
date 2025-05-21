@@ -1,0 +1,163 @@
+{%  extends '/admin/a-dashboard/base_sidebar.html' %}
+{% block head %}
+
+<link rel="stylesheet" href="{{url_for('static', filename = 'css/categories.css')}}">
+{% endblock %}
+
+{% block title %}
+{{selected}}
+{% endblock %}
+
+{% block content %}
+
+<div class="categories">
+    <div class="table-header">
+        <span>
+            <h3 class="rec">Categories</h3>
+        </span>
+
+        <div class="tablecontainer">
+            <a href="/addcategory">Add Category</a>
+
+            <div class="search-categories">
+                <i class="fas fa-arrow-up" id="toggleArrow"></i>
+                <div id="searchDropdown" class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-criteria="name">Name</a>
+                    <a href="#" class="dropdown-item" data-criteria="category">Category</a>
+                </div>
+                <input type="text" id="searchCategories" placeholder="{{ criteria | capitalize }}: Search Categories" value="{{ request.args.get('search', '') }}">
+            </div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categorydata.items %}
+            <tr>
+                <td>{{ category.category_id }}</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.description}}</td>
+                <td>
+                    <div class="dropdown">
+                      <a class="dropdown-toggle">
+                        <span class="material-symbols-outlined" onclick="toggleDropdown(event)">more_horiz</span>
+                      </a>
+                      <div class="dropdown-menu">
+                        <a href="/updatecategory/{{category.category_id}}" class="dropdown-item">
+                            <span class="material-symbols-outlined">edit_square</span>Edit
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="deleteCategory('{{ category.category_id }}'); return false;">
+
+                            <span class="material-symbols-outlined">delete</span>Delete
+                        </a>
+                        
+                        <script>
+                            function deleteCategory(categoryId) {
+                                if (confirm('Are you sure you want to delete this category?')) {
+                                    fetch(`/delete_category/${categoryId}`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    }).then(response => {
+                                        if (response.ok) {
+                                            // Redirect back to the categorys page after successful deletion
+                                            window.location.href = '/admincategories';
+                                        } else {
+                                            alert('Failed to delete the category.');
+                                        }
+                                    }).catch(error => {
+                                        console.error('Error:', error);
+                                        alert('An error occurred.');
+                                    });
+                                }
+                            }
+                        </script>
+                      </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+    <div class="pagination">
+        {% if categorydata.has_prev %}
+            <a href="javascript:void(0);" onclick="goToPageCategory('{{ categorydata.prev_num }}')"><span class="material-symbols-outlined" >chevron_left</span></a>
+        {% else %}
+            <span class="disabled-next material-symbols-outlined" >chevron_left</span>
+        {% endif %}
+        {% for page_num in categorydata.iter_pages() %}
+            {% if page_num == categorydata.page %}
+                <span class="current-page">{{ page_num }}</span>
+            {% else %}
+                <a href="javascript:void(0);" onclick="goToPageCategory('{{ page_num }}')">{{ page_num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if categorydata.has_next %}
+            <a href="javascript:void(0);" onclick="goToPageCategory('{{ categorydata.next_num }}')"><span class="material-symbols-outlined" >chevron_right</span></a>
+        {% else %}
+            <span class="disabled-next material-symbols-outlined" >chevron_right</span>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+ 
+    const toggleArrow = document.getElementById('toggleArrow');
+    const searchDropdown = document.getElementById('searchDropdown');
+    const searchInput = document.getElementById('searchcategorys');
+    let selectedCriteria = 'username'; // Default search criteria
+
+    // Toggle the arrow icon and dropdown menu
+    toggleArrow.addEventListener('click', function() {
+        toggleArrow.classList.toggle('down-arrow');
+        searchDropdown.style.display = searchDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Set selected criteria and update placeholder
+    document.querySelectorAll('#searchDropdown .dropdown-item').forEach(item => {
+        item.addEventListener('click', function(event) {
+            event.preventDefault();
+            selectedCriteria = this.getAttribute('data-criteria');
+            searchInput.placeholder = `${selectedCriteria.charAt(0).toUpperCase() + selectedCriteria.slice(1)}: Search...`;
+            searchDropdown.style.display = 'none';
+            toggleArrow.classList.remove('down-arrow');
+        });
+    });
+
+    // Trigger search on Enter key with selected criteria
+    searchInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            goToPage1(1);
+            event.preventDefault();
+        }
+    });
+
+    function goToPageCategory(page) {
+
+        window.location.href = `/admincategories?page=${page}`; 
+
+    }
+
+// Modify goToPage1 to include selected criteria in the URL
+function goToPage1(page) {
+    const searchQuery = document.getElementById('searchCategorys').value;
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page);
+    url.searchParams.set('search', searchQuery);
+    url.searchParams.set('criteria', selectedCriteria);
+    window.location.assign(url.toString());  // Use assign to reload the page with the new parameters
+}
+</script>
+
+{% endblock %}

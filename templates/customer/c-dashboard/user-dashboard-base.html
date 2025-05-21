@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cutomer Dashboard</title>
+    <link rel="icon" type="images/logo.png'" href="{{url_for('static', filename = 'images/logo_s.png')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/customer/dashboard/customerdashboard.css')}}">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block head %}
+    {% endblock %}
+
+    
+</head>
+
+<body>
+
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <div class="logo">
+                        <img src="{{url_for('static', filename = 'images/logo.png')}}" alt="logo-box" class="logo-box">
+                    </div>
+                    <h2><a href="/">Tech<span class = "blue">ify</span></a></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <!-- Everyone sees the dashboard -->
+                <a href="/customer-dashboard" class="{% if selected.lower() == 'dashboard' %}active{% endif %}">
+                    <span class="material-symbols-outlined">dashboard</span><h3>Dashboard</h3>
+                </a>
+
+                <!-- Only Superadmin and Product Manager see Products -->
+                <a href="/customer-orders" class="{% if selected.lower() == 'orders' %}active{% endif %}">
+                    <span class="material-symbols-outlined">receipt_long</span><h3>Orders</h3>
+                </a>
+                <a href="/my_reviews" class="{% if selected.lower() == 'reviews' %}active{% endif %}">
+                    <span class="material-symbols-outlined">reviews</span><h3>Reviews</h3>
+                </a>
+                <a href="/customer-items" class="{% if selected.lower() == 'received-orders' %}active{% endif %}">
+                    <span class="material-symbols-outlined">inventory</span><h3>Received Orders</h3>
+                </a>
+                <a href="/view_return_requests" class="{% if selected.lower() == 'view_return_requests' %}active{% endif %}">
+                    <span class="material-symbols-outlined">autorenew</span><h3>Return Request</h3>
+                </a>
+                
+                <a href="/wishlist" class="{% if selected.lower() == 'wishlist' %}active{% endif %}">
+                    <span class="material-symbols-outlined">favorite</span><h3>Wishlist</h3>
+                </a>
+                <a href="/customer_address" class="{% if selected.lower() == 'adresses' %}active{% endif %}">
+                    <span class="material-symbols-outlined">alternate_email</span><h3>Addresses</h3>
+                </a>
+                <a href="/customer-info" class="{% if selected.lower() == 'account-details' %}active{% endif %}">
+                    <span class="material-symbols-outlined">person</span><h3>Account Details</h3>
+                </a>
+
+                
+                <!-- Only Superadmin sees Admin Management -->
+                
+                <a href="/logout" >
+                    <span class="material-symbols-outlined">logout</span><h3>Logout</h3>
+                </a>
+                
+            </div>
+        </aside>
+    
+        <main>
+            <div class="header-title">
+                <h3>
+                    <span class="breadcrumb">Customer &gt;</span>
+                    <span class="dashboard">{% block title %} {% endblock %}</span>
+                </h3>
+            </div>
+
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-symbols-outlined active">light_mode</span>
+                    <span class="material-symbols-outlined">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>{% if 'username' in session %}
+                            {{ session['username'] }}
+                        {% else %}
+                            Unknown
+                        {% endif %}</b></p>
+                        <small class="text-muted">Customer</small>
+                    </div>
+                    <img src="{{url_for('static', filename = 'images/customer/no-prof.jpg')}}" class="profile-photo" onclick="toggleMenu()" alt="Profile Picture">
+                    <div class="sub-menu-wrap" id="subMenu">
+                        <div class="sub-menu">
+                            <div class="user-info">
+                                <img src="{{url_for('static', filename = 'images/customer/no-prof.jpg')}}" alt="Profile Picture">
+                                <h2>{{ session['fullname'] }}</h2>
+                            </div>
+                            <hr>
+                            <a href="/customer-info" class="sub-menu-link">
+                                <span class="material-symbols-outlined">person</span>
+                                <p>Edit Profile</p>
+                            </a>
+                            
+                            <a href="/help" class="sub-menu-link">
+                                <span class="material-symbols-outlined">question_mark</span>
+                                <p>Help & Support</p>
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="sub-menu-link">
+                                <span class="material-symbols-outlined">logout</span>
+                                <p>Logout</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% block content2 %}
+            {% endblock %}
+        </div>
+    
+    <script src="{{ url_for('static', filename='js/Dashboard.js') }}"></script>
+</body>
+</html>

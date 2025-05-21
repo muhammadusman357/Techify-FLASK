@@ -1,0 +1,184 @@
+{%extends '/admin/a-dashboard/base_sidebar.html' %}
+{% block head %}
+    
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/orders.css')}}">
+
+
+    {% endblock %}
+
+{% block title %}
+{{selected}}
+{% endblock %}
+
+{% block content %}
+
+<div class="orders">
+    <div class="table-header">
+        <span>
+            <h3 class="rec">Orders</h3>
+        </span>
+
+        <div class="tablecontainer">
+        
+            <div class="search-orders">
+                <i class="fas fa-arrow-up" id="toggleArrow"></i>
+                <div id="searchDropdown" class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-criteria="name">Name</a>
+                    <a href="#" class="dropdown-item" data-criteria="category">Category</a>
+                </div>
+                <input type="text" id="searchOrderss" placeholder="{{ criteria | capitalize }}: Search Orders" value="{{ request.args.get('search', '') }}">
+            </div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Order No.</th>
+                <th>User ID</th>
+                <th>Order Date</th>
+                <th>Shipping Address</th>
+                <th>Billing Address</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Update Status</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order, shipping_street, shipping_city, shipping_state, shipping_country, shipping_postal_code, billing_street, billing_city, billing_state, billing_country, billing_postal_code in orderdata.items %}
+            <tr>
+                <td>{{ order.order_id }}</td>
+                <td>{{ order.user_id }}</td>
+                <td>{{ order.created_at }}</td>
+                <td>
+                    {{ shipping_street }}, {{ shipping_city }}, {{ shipping_state }}, {{ shipping_country }} - {{ shipping_postal_code }}
+                </td>
+                <td>
+                    {{ billing_street }}, {{ billing_city }}, {{ billing_state }}, {{ billing_country }} - {{ billing_postal_code }}
+                </td>
+                <td>{{ order.total_price }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="dropbtn">Update Status</button>
+                        <div class="dropdown-content">
+                            <a href="#" class="update-status" data-order-id="{{ order.order_id }}" data-status="Completed">Completed</a>
+                            <a href="#" class="update-status" data-order-id="{{ order.order_id }}" data-status="Pending">Pending</a>
+                        </div>
+                    </div>
+                </td>
+                <td><a href="/admin_order_details/{{ order.order_id }}" class="details-link">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+
+    <div class="pagination">
+        {% if orderdata.has_prev %}
+            <a href="javascript:void(0);" onclick="goToPageOrder('{{ orderdata.prev_num }}')"><span class="material-symbols-outlined" >chevron_left</span></a>
+        {% else %}
+            <span class="disabled-next material-symbols-outlined" >chevron_left</span>
+        {% endif %}
+        {% for page_num in orderdata.iter_pages() %}
+            {% if page_num == orderdata.page %}
+                <span class="current-page">{{ page_num }}</span>
+            {% else %}
+                <a href="javascript:void(0);" onclick="goToPageOrder('{{ page_num }}')">{{ page_num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if orderdata.has_next %}
+            <a href="javascript:void(0);" onclick="goToPageOrder('{{ orderdata.next_num }}')"><span class="material-symbols-outlined" >chevron_right</span></a>
+        {% else %}
+            <span class="disabled-next material-symbols-outlined" >chevron_right</span>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+ 
+    const toggleArrow = document.getElementById('toggleArrow');
+    const searchDropdown = document.getElementById('searchDropdown');
+    const searchInput = document.getElementById('searchOrders');
+    let selectedCriteria = 'username'; // Default search criteria
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Attach click event listener to all update-status links
+        const updateLinks = document.querySelectorAll('.update-status');
+        
+        updateLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const orderId = this.getAttribute('data-order-id');
+                const newStatus = this.getAttribute('data-status');
+
+                updateStatus(orderId, newStatus);
+            });
+        });
+
+        function updateStatus(orderId, newStatus) {
+            // Send an AJAX request to update the status
+            fetch(`/update_status/${orderId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Order ${orderId} status updated to ${newStatus}`);
+                    location.reload(); // Refresh the page to reflect changes
+                } else {
+                    alert(`Failed to update status for Order ${orderId}: ${data.error}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+                alert('An error occurred while updating the status.');
+            });
+        }
+
+        // Set selected criteria and update placeholder
+        document.querySelectorAll('#searchDropdown .dropdown-item').forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                selectedCriteria = this.getAttribute('data-criteria');
+                searchInput.placeholder = `${selectedCriteria.charAt(0).toUpperCase() + selectedCriteria.slice(1)}: Search...`;
+                searchDropdown.style.display = 'none';
+                toggleArrow.classList.remove('down-arrow');
+            });
+        });
+
+        // Trigger search on Enter key with selected criteria
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                goToPage1(1);
+                event.preventDefault();
+            }
+        });
+});
+
+
+    function goToPageOrder(page) {
+
+        window.location.href = `/orders?page=${page}`; 
+
+    }
+    // Modify goToPage1 to include selected criteria in the URL
+    function goToPage1(page) {
+        const searchQuery = document.getElementById('searchOrderss').value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', page);
+        url.searchParams.set('search', searchQuery);
+        url.searchParams.set('criteria', selectedCriteria);
+        window.location.assign(url.toString());  // Use assign to reload the page with the new parameters
+    }
+</script>
+
+{% endblock %}

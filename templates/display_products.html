@@ -1,0 +1,409 @@
+{% extends 'home-base.html' %}
+
+{% block head %}
+
+{% endblock %}
+{% block back1 %}<div class="container2">{% endblock %}
+    {% block back2 %}</div>{% endblock %}
+
+{% block content %}
+<div class="pro-container">
+    <div class="sub-nav1">
+        <a href="{{ url_for('show_category_products', category_name='Headsets') }}">HEADSETS</a>
+        <a href="{{ url_for('show_category_products', category_name='keyboards') }}">KEYBOARDS</a>
+        <a href="{{ url_for('show_category_products', category_name='mouse') }}">MOUSE</a>
+        <a href="{{ url_for('show_category_products', category_name='cpus') }}">CPUS</a>
+        <a href="{{ url_for('show_category_products', category_name='monitors') }}">MONITORS</a>
+        <a href="{{ url_for('show_category_products', category_name='gpus') }}">GPUS</a>
+        <a href="{{ url_for('show_category_products', category_name='ram') }}">MEMORY</a>
+        <a href="{{ url_for('show_category_products', category_name='cases') }}">CASINGS</a>
+        
+    </div>
+
+
+    <div class="content">
+        <h1>{{ selected | upper }}</h1>
+        <div class="breadcrumb">
+            <a class="breadcrumb__link" href="/">
+                <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="home" role="img"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="icon icon-home">
+                    <path fill="currentColor"
+                        d="M541 229.16l-61-49.83v-77.4a6 6 0 0 0-6-6h-20a6 6 0 0 0-6 6v51.33L308.19 39.14a32.16 32.16 0 0 0-40.38 0L35 229.16a8 8 0 0 0-1.16 11.24l10.1 12.41a8 8 0 0 0 11.2 1.19L96 220.62v243a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-128l64 .3V464a16 16 0 0 0 16 16l128-.33a16 16 0 0 0 16-16V220.62L520.86 254a8 8 0 0 0 11.25-1.16l10.1-12.41a8 8 0 0 0-1.21-11.27zm-93.11 218.59h.1l-96 .3V319.88a16.05 16.05 0 0 0-15.95-16l-96-.27a16 16 0 0 0-16.05 16v128.14H128V194.51L288 63.94l160 130.57z"
+                        class=""></path>
+                </svg>
+                Home
+            </a>
+            <span>/</span>
+            <a class="breadcrumb__link" href="#">
+                {{selected}}
+            </a>
+        </div>
+    </div>
+    <div class="maincontent">
+        <div class="filters">
+            <div class="filter-header">
+                <h2>FILTERS</h2>
+                <!-- Filter Button -->
+                <div class="filter-apply">
+                    <form id="filter-form" method="get" action="{{ url_for('show_category_products', category_name=selected) }}">
+                        <button type="submit" id="filter-button">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+            <hr>
+            <div class="filter-section" id="availabilitySection">
+                <h3 onclick="toggleSection('availabilitySection')">
+                    Availability
+                    <span class="material-symbols-outlined icon">remove</span>
+                </h3>
+                <hr>
+                <div class="filter-content">
+                    <label><input type="checkbox"> In stock (25)</label>
+                    <label><input type="checkbox"> Out of stock (2)</label>
+                </div>
+            </div>
+            <div class="filter-section" id="priceSection">
+                <h3 onclick="toggleSection('priceSection')">
+                    Price
+                    <span class="material-symbols-outlined icon">remove</span>
+                </h3>
+                <hr>
+                <div class="filter-content">
+                    <div class="slider-container">
+                        <div class="slider">
+                            <div class="highlight" id="highlight"></div>
+                            <!-- Set the slider bounds using category_min_price and category_max_price -->
+                            <input type="range" 
+                                   min="{{ category_min_price }}" 
+                                   max="{{ category_max_price }}" 
+                                   value="{{ selected_min_price }}" 
+                                   id="minPrice" 
+                                   oninput="updatePrice()">
+                            <input type="range" 
+                                   min="{{ category_min_price }}" 
+                                   max="{{ category_max_price }}" 
+                                   value="{{ selected_max_price }}" 
+                                   id="maxPrice" 
+                                   oninput="updatePrice()">
+                        </div>
+                    </div>
+                    <div class="value-container">
+                        <!-- Display the selected filter values dynamically -->
+                        <div class="value-box">
+                            <span>Rs</span>
+                            <span id="value1">{{ selected_min_price }}</span>
+                        </div>
+                        <div class="to-text">to</div>
+                        <div class="value-box">
+                            <span>Rs</span>
+                            <span id="value2">{{ selected_max_price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-section" id="moreFiltersSection">
+                <h3 onclick="toggleSection('moreFiltersSection')">
+                    Brands
+                    <span class="material-symbols-outlined icon">remove</span>
+                </h3>
+                <hr>
+                <div class="filter-content">
+
+                    <form id="vendor-filter-form">
+                        {% for vendor in vendors %}
+                        <label>
+                            <input type="checkbox" name="vendor" value="{{ vendor }}">
+                            {{ vendor }}
+                        </label>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+            {% if filters %}
+            {% for filter_name, filter_values in filters.items() %}
+            <div class="filter-section" id="{{ filter_name }}">
+                <h3 onclick="toggleSection('{{ filter_name }}')">
+                    {{ filter_name }}
+                    <span class="material-symbols-outlined icon">remove</span>
+                </h3>
+                <hr>
+                <div class="filter-content">
+                    {% for value in filter_values %}
+                    <label>
+                        <input type="checkbox"  name="{{ value }}" value="{{ value }}"> {{ value }} ({{ loop.length }})
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            
+
+
+        </div>
+
+        <div class="products">
+            <div class="products-header">
+                <div class="product-count text-muted">{% if product_count %}{{product_count}}{% else %}0{% endif %} products </div>
+                <div class="sort-container" id="sortContainer">
+                    <button class="sort-button" onclick="toggleDropdown()">Sort by <span id="selectedOption">{{ sort_option | replace('_', ' ') }}</span> <span class="material-symbols-outlined">keyboard_arrow_down</span></button>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <a href="{{ url_for('show_category_products', category_name=selected, sort='featured') }}" 
+                           class="{{ 'selected' if sort_option == 'featured' else '' }}">
+                           Featured
+                           {% if sort_option == 'featured' %}<i class="fa fa-check"></i>{% endif %}
+                        </a>
+                        <a href="{{ url_for('show_category_products', category_name=selected, sort='best_selling') }}" 
+                           class="{{ 'selected' if sort_option == 'best_selling' else '' }}">
+                           Best selling
+                           {% if sort_option == 'best_selling' %}<i class="fa fa-check"></i>{% endif %}
+                        </a>
+                        <a href="{{ url_for('show_category_products', category_name=selected, sort='alphabetically_az') }}" 
+                           class="{{ 'selected' if sort_option == 'alphabetically_az' else '' }}">
+                           Alphabetically: A-Z
+                           {% if sort_option == 'alphabetically_az' %}<i class="fa fa-check"></i>{% endif %}
+                        </a>
+                        <a href="{{ url_for('show_category_products', category_name=selected, sort='alphabetically_za') }}" 
+                           class="{{ 'selected' if sort_option == 'alphabetically_za' else '' }}">
+                           Alphabetically: Z-A
+                           {% if sort_option == 'alphabetically_za' %}<i class="fa fa-check"></i>{% endif %}
+                        </a>
+                        <a href="{{ url_for('show_category_products', category_name=selected, sort='price_low_to_high') }}" 
+                           class="{{ 'selected' if sort_option == 'price_low_to_high' else '' }}">
+                           Price: low to high
+                           {% if sort_option == 'price_low_to_high' %}<i class="fa fa-check"></i>{% endif %}
+                        </a>
+                        <a href="{{ url_for('show_category_products', category_name=selected, sort='price_high_to_low') }}" 
+                           class="{{ 'selected' if sort_option == 'price_high_to_low' else '' }}">
+                           Price: high to low
+                           {% if sort_option == 'price_high_to_low' %}<i class="fa fa-check"></i>{% endif %}
+                        </a>
+                        <a href="{{ url_for('show_category_products', category_name=selected, sort='date_old_to_new') }}" 
+                           class="{{ 'selected' if sort_option == 'date_old_to_new' else '' }}">
+                           Date: old to new
+                           {% if sort_option == 'date_old_to_new' %}<i class="fa fa-check"></i>{% endif %}
+                        </a>
+                        <a href="{{ url_for('show_category_products', category_name=selected, sort='date_new_to_old') }}" 
+                           class="{{ 'selected' if sort_option == 'date_new_to_old' else '' }}">
+                           Date: new to old
+                           {% if sort_option == 'date_new_to_old' %}<i class="fa fa-check"></i>{% endif %}
+                        </a>
+                    </div>
+                </div>
+                
+                
+                
+                
+            </div>
+            <!-- ---- products display start ---- -->
+            <div class="products-display">
+                {% if products %}
+                {% for product in products %}
+                <div class="product">
+
+
+                    <div class="product-header">
+                        <h2>
+                            {{ selected | upper }}
+                        </h2>
+                        <div class="icons">
+                            <button class="wishlist-btn" data-product-id="{{ product['id'] }}">
+                                <span class="material-symbols-outlined">favorite</span> <!-- Empty heart by default -->
+                            </button>
+                            
+                            
+                            
+                            <button><span class="material-symbols-outlined">cached</span></button>
+                            <button><a href="{{ url_for('product_details', product_id=product.id) }}">
+                                    <span class="material-symbols-outlined gr">fullscreen</span></a></button>
+                        </div>
+                    </div>
+                    <div class="image-container">
+                        <a href="{{ url_for('product_details', product_id=product.id) }}">
+                            <img alt="image-1" class="main-img" src="{{ product.image_urls[0] }}" />
+                            <img alt="image-2" class="hover-img" src="{{ product.image_urls[1] }}" /></a>
+                    </div>
+
+                    <div class="discount">SAVE 58%</div>
+                    <a href="{{ url_for('product_details', product_id=product.id) }}">
+                        <h3>{{ product.name }}</h3>
+                    </a>
+
+                    <div class="reviews">
+                        {% if product.avg_rating %}
+                        {% set full_stars = product.avg_rating|int %} <!-- Extract full stars -->
+                        {% set half_star = 1 if product.avg_rating - full_stars >= 0.5 else 0 %}
+                        <!-- Check if there's a half star -->
+                        {% set empty_stars = 5 - full_stars - half_star %} <!-- Remaining stars are empty -->
+            
+                        <!-- Full stars -->
+                        {% for _ in range(full_stars) %}
+                        <span class="star"><i class="fas fa-star"></i></span> <!-- Filled star -->
+                        {% endfor %}
+            
+                        <!-- Half star -->
+                        {% if half_star %}
+                        <i class="fas fa-star-half-alt"></i> <!-- Half-filled star -->
+                        {% endif %}
+            
+                        <!-- Empty stars -->
+                        {% for _ in range(empty_stars) %}
+                        <span class="star-off"><i class="far fa-star"></i></span> <!-- Empty star -->
+                        {% endfor %}
+            
+                        <span>({{ product.avg_rating }} / 5)</span>
+                        {% else %}
+                        {% set empty_stars = 5 %} <!-- Remaining stars are empty -->
+                        <!-- Empty stars -->
+                        {% for _ in range(empty_stars) %}
+                        <span class="star-off"><i class="far fa-star"></i></span> <!-- Empty star -->
+                        {% endfor %}
+                        <span>No Reviews</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="price-stock">
+                        <div class="price">PKR {{ product.price }}</div>
+                        {% if product.stock > 0 %}
+                        <div class="stock-in">In Stock</div>
+                        <a href="javascript:void(0);">
+                            <div class="stock-add add-to-cart" data-id="{{ product.id }}">Add To Cart</div>
+                        </a>
+                        <div class="quantity-popup" id="popup-{{ product.id }}" style="display: none;">
+                            <div class="quantity-counter">
+                                <button class="decrease-btn" data-id="{{ product.id }}">-</button>
+                                <input type="number" id="quantity-input-{{ product.id }}" value="1" min="1" />
+                                <button class="increase-btn" data-id="{{ product.id }}">+</button>
+                            </div>
+                            <button class="confirm-btn" data-id="{{ product.id }}">Confirm</button>
+                        </div>
+                        {% else %}
+                        <div class="stock-out">Out Of Stock</div>
+                        {% endif %}
+                    </div>
+                    
+                    </a>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div>No products found for this category.</div>
+                {% endif %}
+            </div>
+
+            <!--End of Display Products-->
+        </div>
+    </div>
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ url_for('show_category_products', category_name=selected, page=page-1, sort=sort_option) }}" class="prev"><i class="fas fa-chevron-left arrow arrow-left"></i></a>
+        {% endif %}
+        
+        <span class="page-number">Page {{ page }} of {{ total_pages }}</span>
+    
+        {% if page < total_pages %}
+        <a href="{{ url_for('show_category_products', category_name=selected, page=page+1, sort=sort_option) }}" class="next">Next</a>
+        {% endif %}
+    </div>
+    
+
+
+</div>
+<script>
+
+
+
+    function toggleSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        const icon = section.querySelector('.icon');
+        section.classList.toggle('collapsed');
+
+        if (section.classList.contains('collapsed')) {
+            icon.textContent = 'keyboard_arrow_down'; // Change icon to "remove"
+        } else {
+            icon.textContent = 'remove'; // Change icon to "remove"
+        }
+    }
+
+    const minPrice = document.getElementById('minPrice');
+    const maxPrice = document.getElementById('maxPrice');
+    const value1 = document.getElementById('value1');
+    const value2 = document.getElementById('value2');
+    const highlight = document.getElementById('highlight');
+
+    function updatePrice() {
+        const min = parseInt(minPrice.value);
+        const max = parseInt(maxPrice.value);
+
+        value1.textContent = min;
+        value2.textContent = max;
+
+        updateHighlight();
+    }
+
+    function updateHighlight() {
+        const min = parseInt(minPrice.value);
+        const max = parseInt(maxPrice.value);
+        const range = maxPrice.max - minPrice.min;
+        const minPercent = (min - minPrice.min) / range * 100;
+        const maxPercent = (max - minPrice.min) / range * 100;
+
+        highlight.style.left = `${minPercent}%`;
+        highlight.style.width = `${maxPercent - minPercent}%`;
+    }
+
+    minPrice.addEventListener('input', updatePrice);
+    maxPrice.addEventListener('input', updatePrice);
+
+    updateHighlight();
+
+
+    function toggleDropdown() {
+        var container = document.getElementById('sortContainer');
+        container.classList.toggle('active');
+    }
+    
+    
+   // Function to handle the filter form submission
+   document.getElementById("filter-button").addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const filterForm = document.getElementById("filter-form");
+    const urlParams = new URLSearchParams();
+
+    // Availability filter
+    const availabilityFilter = document.querySelector('input[name="in_stock"]:checked');
+    if (availabilityFilter) {
+        urlParams.append("in_stock", availabilityFilter.value);
+    }
+
+    // Vendor filter
+    const vendorFilters = document.querySelectorAll('input[name="vendor"]:checked');
+    vendorFilters.forEach((vendor) => {
+        urlParams.append("vendor", vendor.value);
+    });
+
+    // Dynamic filters (e.g., size, brand, etc.)
+    const dynamicFilters = document.querySelectorAll('.filter-section input[type="checkbox"]:checked');
+    dynamicFilters.forEach((filter) => {
+        const name = filter.name;
+        const value = filter.value;
+        urlParams.append(name, value);
+    });
+
+    // Price range filter
+    const minPrice = document.getElementById("minPrice").value;
+    const maxPrice = document.getElementById("maxPrice").value;
+    urlParams.append("min_price", minPrice);
+    urlParams.append("max_price", maxPrice);
+
+    // Redirect to the filtered URL
+    const actionUrl = filterForm.getAttribute("action");
+    window.location.href = `${actionUrl}?${urlParams.toString()}`;
+}); 
+
+
+
+</script>
+
+{% endblock %}

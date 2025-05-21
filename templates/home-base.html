@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" type="images/logo.png'" href="{{url_for('static', filename = 'images/logo_s.png')}}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/customer/home.css')}}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer/chatbox.css') }}">
+
+
+    {% block head %}
+    {% endblock %}
+
+    
+</head>
+
+<body>
+    <div class="header">
+        <a href="#">
+            Get 25% OFF on your first order. Order Now
+        </a>
+    </div>
+    {% block back1 %}{% endblock %}
+    <div class="navbar-container">
+        <div class="navbar">
+            <a href="/">
+                <div class="logo">TECHIFY</div>
+            </a>
+            <div class="menu">
+                <button id="productsButton">Products<span id="arrowIcon"
+                        class="material-symbols-outlined">keyboard_arrow_down</span></button>
+                <a href="/Laptops">Laptops</a>
+                <a href="/Prebuild PCs">Pre build PCs</a>
+            </div>
+            <div class="search-bar">
+                <input id="searchInput" onkeyup="filterProducts()" placeholder="Search for products..." type="text" />
+                <button id="clearSearch" onclick="clearSearchInput()" class="close1">&#x2715;</button>
+            </div>
+
+
+            <div class="icons">
+                
+                
+
+                <button id="menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-symbols-outlined active">light_mode</span>
+                    <span class="material-symbols-outlined">dark_mode</span>
+                </div>
+                <button id="cart-btn" onclick="toggleCart()">
+                    <i><span class="material-symbols-outlined">shopping_cart</span></i>
+                </button>
+                {% if username %}
+                
+                <div class="profile-dropdown">
+                    <div onclick="toggle()" class="profile-dropdown-btn">
+                        <div class="profile-img">
+                            <i class="fa-solid fa-circle"></i>
+                        </div>
+                        <span class="user-info">{{username | capitalize}}
+                            <i class="fa-solid fa-angle-down"></i>
+                        </span>
+                    </div>
+
+                </div>
+
+                {%else%}
+                <a id="account-btn" class="account-btn" href="/userlogin">
+                    <i class="material-symbols-outlined">account_circle</i>
+                    <span>Login/Register</span>
+                </a>
+                
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+
+    {% block container1 %}
+    {% endblock %}
+
+    {% block back2 %}{% endblock %}
+
+    <!--<div class="feature-container">
+        <div class="card">
+            <div class="icon-container">
+                <i class="fas fa-shipping-fast"></i>
+            </div>
+            <h3>Free Shipping</h3>
+            <p>Upgrade your style today and get FREE shipping on all orders! Don't miss out.</p>
+        </div>
+        <div class="card">
+            <div class="icon-container">
+                <i class="fas fa-thumbs-up"></i>
+            </div>
+            <h3>Satisfaction Guarantee</h3>
+            <p>Shop confidently with our Satisfaction Guarantee: Love it or get a refund.</p>
+        </div>
+        <div class="card">
+            <div class="icon-container">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Secure Payment</h3>
+            <p>Your security is our priority. Your payments are secure with us.</p>
+        </div>
+    </div>-->
+    <!-- categories -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- Displaying products dynamically -->
+    <div id="products-display">
+        <!-- Products will be displayed here -->
+    </div>
+
+    <ul class="profile-dropdown-list">
+        <li class="profile-dropdown-list-item">
+            <a href="/customer-info">
+                <i class="fa-regular fa-user"></i>
+                Edit Profile
+            </a>
+        </li>
+        <li class="profile-dropdown-list-item">
+            <a href="#" id="chat-icon">
+                <i class="material-symbols-outlined">support_agent</i>
+                Customer Support
+            </a>
+        </li>
+        
+
+        <li class="profile-dropdown-list-item">
+            <a href="/my_reviews">
+                <i class="fa-solid fa-star"></i>
+                My Reviews
+            </a>
+        </li>
+
+        <li class="profile-dropdown-list-item">
+            <a href="/customer-orders">
+                <i class="fa-solid fa-bag-shopping"></i>
+                My Orders
+            </a>
+        </li>
+        <li class="profile-dropdown-list-item">
+            <a href="/customer-dashboard">
+                <i class="fa-solid fa-sliders"></i>
+                Settings
+            </a>
+        </li>
+        <li class="profile-dropdown-list-item">
+            <a href="#">
+                <i class="fa-regular fa-circle-question"></i>
+                Help & Support
+            </a>
+        </li>
+
+        <li class="profile-dropdown-list-item">
+            <a href="{{ url_for('logout') }}">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Log out
+            </a>
+        </li>
+    </ul>
+
+    
+    <div class="search-container" id="search-container">
+        <div class="sidebar">
+            <div class="product-list" id="productList">
+                <h2>Product Results</h2>
+                <!-- Dynamically populated product list -->
+                {% for product in products %}
+
+                <div class="product-item" data-name="{{ product.name }}"
+                    onmouseover="showPreview(this, '{{ product.name }}', '{{ product.description }}', 'PKR {{ product.price }}', '{{ product.image_url }}','{{ product.id }}','{{ product.stock }}')">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" width="50" height="50" />
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description }}</p>
+                        <span class="price">PKR {{ product.price }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="show-more">Show More</div>
+            </div>
+            <div class="product-details" id="productDetails">
+                <div class="image-container">
+                    <img id="productImage" src="" alt="Product Image" />
+                </div>
+                <h2 id="productName"></h2>
+                <p id="productDescription"></p>
+                <div class="price" id="productPrice"></div>
+
+                <!-- Add this button for stock availability -->
+                <div class="add-to-bag">
+                    <button id="addToCartButton" class="add-to-cart">
+                        <i class="fas fa-shopping-bag"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div id="categoriesMenu" class="categories-menu"></div>
+
+    <!-- Chat Box -->
+    <div id="chatbox-container" class="chatbox hidden">
+        <div class="chat-header">
+          <span>Customer Support</span>
+          <i class="material-symbols-outlined close-chat" id="close-chat">close</i>
+        </div>
+        <div class="chat-body" id="chat-body">
+          <!-- Chat messages will appear here -->
+        </div>
+        <div class="chat-footer">
+          <input type="text" id="message-input" placeholder="Type your message..." />
+          <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <div class="cart-overlay" id="overlay" onclick="toggleCart()"></div>
+
+    <div class="cart-container" id="cart-container">
+        <div class="cart-header">
+            <div class="cart-header-left">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="cart-item-count">0 ITEM</span>
+            </div>
+            <i class="fas fa-times close" onclick="toggleCart()"></i>
+        </div><br>
+        <div class="progress-bar-container">
+            <span>Spend $699.89 more and get free shipping!</span>
+            <div class="progress-bar"></div>
+        </div>
+        <div class="cart-items-container">
+            {% for item in items %}
+            <div class="cart-items" data-product-id="{{ item.product_id }}">
+                <img src="{{ item.image_url }}" alt="Product">
+                <div class="cart-items-details">
+                    <p>{{ item.name }}</p>
+                    <div class="line-price">
+                        <h3>{{ item.name[:20] }} abcd</h3>
+                        <div class="price">${{ item.price }}</div>
+                    </div>
+                    <div class="cart-items-quantity">
+                        <div class="cart-item-counter">
+                            <button onclick="updateQuantity(this, -1)">-</button>
+                            <span>{{ item.quantity }}</span>
+                            <button onclick="updateQuantity(this, 1)">+</button>
+                        </div>
+                        <span class="cart-items-remove" onclick="removeFromCart('{{ item.product_id }}')">remove</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="cart-footer">
+            <div class="actions">
+                <a href="javascript:void(0);" onclick="toggleSubmenu('note')">
+                    <i class="fas fa-sticky-note"></i>Add Note
+                </a>
+                <a href="javascript:void(0);" onclick="toggleSubmenu('shipping')">
+                    <i class="fas fa-shipping-fast"></i>Shipping
+                </a>
+                <a href="javascript:void(0);" onclick="toggleSubmenu('coupon')">
+                    <i class="fas fa-gift"></i> Apply Coupon
+                </a>
+            </div>
+            <div>Subtotal:<span class="subtotal"> $150</span></div>
+            <a class="cart-button" href="/new_checkout" role="button">Go To Checkout</a>
+
+        </div>
+    </div>
+
+    <!-- Add Note Submenu -->
+    <div class="cart-submenu" id="note">
+        <div class="sub-header">
+            <h4>Enter Note</h4>
+            <div class="close" onclick="toggleSubmenu('note')">&times;</div>
+        </div>
+        <textarea placeholder="Enter your note here..."></textarea>
+        <button>Save Note</button>
+    </div>
+
+    <!-- Shipping Submenu -->
+    <div class="cart-submenu" id="shipping">
+        <div class="sub-header">
+            <h4>Enter Shipping Address</h4>
+            <div class="close" onclick="toggleSubmenu('shipping')">&times;</div>
+        </div>
+        <input type="text" placeholder="Enter your address" />
+        <button>Calculate Shipping</button>
+    </div>
+
+    <div class="cart-submenu" id="coupon">
+        <div class="sub-header">
+            <h4>Enter Coupon Code</h4>
+            <div class="close" onclick="toggleSubmenu('coupon')">&times;</div>
+        </div>
+
+        <input type="text" placeholder="Coupon Code">
+        <button>Apply Coupon</button>
+    </div>
+
+
+    <footer>
+        <div class="line-container">
+            <div class="line3"></div>
+        </div>
+        <div class="footer">
+
+            <div class="contact">
+                <i><img src="{{url_for('static', filename = 'images/customer/call.svg')}}" alt=""></i>
+                <div>
+                    <div>Order And Service</div>
+                    <div class="phone-number">(084) 123 - 456 88</div>
+                </div>
+            </div>
+            <div class="subscribe">
+                <h3>Subscribe to our mailing list</h3>
+                <p>Sign up for special perks starting now with a 10% Off Coupon!</p>
+            </div>
+            <div class="subscribe">
+
+                <div class="email-input">
+                    <input type="email" placeholder="Enter your email..." name="email">
+                    <button id="subscribe-button">Subscribe <span class="danger"><i
+                                class="fas fa-chevron-right"></i></span></button>
+                </div>
+                <div id="popup-message" class="hidden"></div>
+            </div>
+
+        </div>
+        <div class="decorative-line"></div>
+
+
+        <div class="footer2">
+            <div class="container">
+                <div>
+
+                    <ul>
+                        <li>
+                            <h3>
+                                Customer
+                            </h3>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Help Center
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                My Account
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Track My Order
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Return Policy
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Gift Cards
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+
+                    <ul>
+                        <li>
+                            <h3>
+                                About Us
+                            </h3>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Company Info
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Press Releases
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Careers
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Reviews
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Investor Relations
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+
+                    <ul>
+                        <li>
+                            <h3>
+                                Quick Links
+                            </h3>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Search
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Become a Reseller
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                About Us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Contact Us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Terms of Service
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+
+                    <ul>
+                        <li>
+                            <h3>
+                                My Account
+                            </h3>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Store Location
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Order History
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Wish List
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Newsletter
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Specials
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="contact-info">
+                    <ul>
+                        <li>
+                            <p>
+                                2972 Westheimer Rd. Santa Ana, Illinois 85486
+                            </p>
+                            <p>
+                                <a href="#">
+                                    Send Message
+                                </a>
+                            </p>
+                            <p>
+                                Mon - Fri: 9am - 5pm
+                            </p>
+                            <div class="social-icons">
+                                <a href="#" title="1"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" title="2"><i class="fab fa-twitter"></i></a>
+                                <a href="#" title="3"><i class="fab fa-instagram"></i></a>
+                                <a href="#" title="4"><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>
+                    Copyright © 2024
+                    <a href="#">
+                        Techify
+                    </a>
+                    . All Rights Reserved
+                </p>
+                <div class="payment-methods">
+                    <img alt="payment logo" height="30"
+                        src="{{ url_for('static', filename='images/customer/mc.avif') }}">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/customer/home.js') }}"></script>
+    <script>
+        
+
+
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            // Fetch and update the cart on page load
+            const response = await fetch('/cart');
+            const result = await response.json();
+            if (response.ok) {
+                updateCartUI(result.items, result.subtotal);
+            }
+        });
+        function fetchCartData() {
+            fetch('/cart')
+                .then(response => response.json())
+                .then(data => {
+                    // Extract total items from the JSON response
+                    const totalItems = data.total_items || 0;
+
+                    // Update the cart item count in the header
+                    const cartItemCount = document.getElementById('cart-item-count');
+                    cartItemCount.textContent = `${totalItems} ITEM${totalItems !== 1 ? 'S' : ''}`;
+                })
+                .catch(error => console.error('Error fetching cart data:', error));
+        }
+
+        // Call this function when the page loads
+        document.addEventListener('DOMContentLoaded', fetchCartData);
+
+        // Remove item from the cart
+        function removeFromCart(productId) {
+            fetch(`/remove_item/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        // Update the cart UI with new items and subtotal
+                        updateCartUI(result.items, result.subtotal);
+
+                        // Dynamically update the cart item count in the header
+                        const cartItemCountElement = document.querySelector('#cart-item-count');
+                        if (cartItemCountElement && result.total_items !== undefined) {
+                            cartItemCountElement.textContent = `${result.total_items} ITEM${result.total_items !== 1 ? 'S' : ''}`;
+                        }
+
+                        // Optionally, remove the cart item from the DOM
+                        const cartItemElement = document.querySelector(`[data-product-id="${productId}"]`);
+                        if (cartItemElement) {
+                            cartItemElement.remove();
+                        }
+                        console.log("removed product " + productId)
+                    } else {
+                        alert('Failed to remove item from cart.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error removing item from cart:', error);
+                    alert('An error occurred while removing the item.');
+                });
+        }
+
+
+
+        // Function to update the cart UI
+        function updateCartUI(items, subtotal) {
+            let cartItemsContainer = document.querySelector('.cart-items-container');
+            cartItemsContainer.innerHTML = '';  // Clear existing cart items
+
+            if (items.length > 0) {
+                items.forEach(item => {
+                    const cartItemHtml = `
+                <div class="cart-items" data-product-id="${item.product_id}">
+                    <img src="${item.image_url}" alt="Product">
+                    <div class="cart-items-details">
+                        <div class="line-price">
+                            <h3>${item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name}</h3>
+                            <div class="price">PKR ${item.price}</div>
+                        </div>
+                        <div class="cart-items-quantity">
+                            <div class="cart-item-counter">
+                                <button onclick="updateQuantity(this, -1, ${item.product_id})">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="updateQuantity(this, 1, ${item.product_id})">+</button>
+                            </div>
+                            <span class="cart-items-remove" onclick="removeFromCart(${item.product_id})">remove</span>
+                        </div>
+                    </div>
+                </div>`;
+                    cartItemsContainer.innerHTML += cartItemHtml;
+                });
+            } else {
+                cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+            }
+
+            document.querySelector('.subtotal').textContent = `PKR ${subtotal}`;
+        }
+        async function updateQuantity(button, change) {
+            const quantitySpan = button.parentElement.querySelector('span');
+            let quantity = parseInt(quantitySpan.textContent);
+            quantity = Math.max(1, quantity + change); // Prevent quantity from going below 1
+
+            // Get product ID from the parent element
+            const cartItem = button.closest('.cart-items');
+            const productId = cartItem?.getAttribute('data-product-id');
+            console.log("Cart Item:", cartItem);
+            console.log("Product ID:", productId);
+
+            if (!productId) {
+                console.error('Product ID not found in the DOM');
+                return;
+            }
+
+            // Send updated quantity to the server
+            try {
+                const response = await fetch('/update_quantity', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ product_id: productId, quantity: quantity })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    quantitySpan.textContent = data.updated_quantity;
+                    document.querySelector('.subtotal').textContent = `PKR ${data.subtotal}`;
+                    // Update cart-item-count dynamically
+                    const cartItemCount = document.querySelector('.cart-header-left span');
+                    cartItemCount.textContent = `${data.total_items} ITEM${data.total_items > 1 ? 'S' : ''}`;
+                } else {
+                    //console.error('Failed to update quantity:', await response.text());
+                    //alert('Failed to update quantity');
+                    const error = await response.json();
+                    alert(error.message); // Display the custom error message
+                }
+            } catch (error) {
+                console.error('Error updating quantity:', error);
+                alert('An error occurred while updating quantity');
+            }
+        }
+
+        $(document).ready(function () {
+            // Target the specific button by its id or class
+            $('#subscribe-button').click(function (e) {
+                e.preventDefault(); // Prevent form submission
+
+                const emailInput = $('input[name="email"]').val(); // Get email input value
+                const popupMessage = $('#popup-message'); // Target the popup element
+
+                if (emailInput.trim() === "") {
+                    showPopupMessage("✖ Please enter a valid email address.", "error");
+                    return;
+                }
+
+                $.ajax({
+                    url: '/send_mail', // Flask route
+                    type: 'GET',
+                    data: { email: emailInput }, // Send email as a parameter
+                    success: function (response) {
+                        if (response.valid) {
+                            showPopupMessage("✔ Email sent successfully!", "success");
+                        } else {
+                            showPopupMessage("✖ Failed to send email. Please try again.", "error");
+                        }
+                    },
+                    error: function () {
+                        showPopupMessage("✖ An error occurred. Please try again later.", "error");
+                    }
+                });
+            });
+
+            function showPopupMessage(message, type) {
+                const popupMessage = $('#popup-message');
+
+                // Set message and type
+                popupMessage.text(message);
+                popupMessage.removeClass('success error').addClass(type);
+
+                // Show popup with animation
+                popupMessage.addClass('show');
+                popupMessage.removeClass('hidden');
+
+                // Hide popup after 3 seconds
+                setTimeout(function () {
+                    popupMessage.removeClass('show');
+                    setTimeout(function () {
+                        popupMessage.addClass('hidden');
+                    }, 500); // Wait for the fade-out animation to complete
+                }, 3000);
+            }
+        });
+
+        // Send the search request to the Flask backend on input change
+        $('#searchBox').on('input', function () {
+            const searchQuery = $(this).val();
+
+            // Only make the request if the input is not empty
+            if (searchQuery.length > 0) {
+                $.ajax({
+                    url: '/search',
+                    method: 'GET',
+                    data: { query: searchQuery },
+                    success: function (response) {
+                        // Update the product display
+                        $('#products-display').html('');
+                        if (response.products.length > 0) {
+                            response.products.forEach(product => {
+                                const productHtml = `
+                                    <div class="product">
+                                        <img src="${product.image_url || 'default.jpg'}" alt="${product.name}" />
+                                        <h3>${product.name}</h3>
+                                        <p>${product.description}</p>
+                                        <p>Price: PKR ${product.price}</p>
+                                    </div>
+                                `;
+                                $('#products-display').append(productHtml);
+                            });
+                        } else {
+                            $('#products-display').html('<p>No products found.</p>');
+                        }
+                    },
+                    error: function () {
+                        $('#products-display').html('<p>Error fetching results.</p>');
+                    }
+                });
+            } else {
+                // Clear the product display if search box is empty
+                $('#products-display').html('');
+            }
+        });
+
+
+
+        // Function to filter products
+        function filterProducts() {
+            var input, filter, productList, productItems, productName, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            productList = document.getElementsByClassName('product-list')[0];
+            productItems = productList.getElementsByClassName('product-item');
+            var container = document.getElementById('search-container');
+            var clearButton = document.getElementById('clearSearch');
+            var hasResults = false;
+
+            // Show/hide clear button
+            clearButton.style.display = filter ? 'block' : 'none';
+
+            for (i = 0; i < productItems.length; i++) {
+                productName = productItems[i].getAttribute('data-name');
+                if (productName) {
+                    txtValue = productName.toUpperCase();
+                    if (txtValue.indexOf(filter) > -1) {
+                        productItems[i].style.display = "";
+                        hasResults = true;
+                    } else {
+                        productItems[i].style.display = "none";
+                    }
+                }
+            }
+
+            if (filter && hasResults) {
+                container.classList.add('show');
+            } else {
+                container.classList.remove('show');
+            }
+        }
+
+        // Function to clear search input and results
+        function clearSearchInput() {
+            var input = document.getElementById('searchInput');
+            input.value = "";
+            filterProducts(); // Reset product list
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            var container = document.getElementById('search-container');
+            var searchBar = document.querySelector('.search-bar');
+            if (!searchBar.contains(event.target)) {
+                container.classList.remove('show');
+            }
+        });
+
+
+        function showPreview(element, name, description, price, imageUrl, id, stock) {
+            var productDetails = document.getElementById('productDetails');
+            var productName = document.getElementById('productName');
+            var productDescription = document.getElementById('productDescription');
+            var productPrice = document.getElementById('productPrice');
+            var productImage = document.getElementById('productImage');
+            var addToCartButton = document.getElementById('addToCartButton');
+
+            productName.textContent = name;
+            productDescription.textContent = description;
+            productPrice.textContent = price;
+            productImage.src = imageUrl;
+
+            // Check stock availability
+            if (stock > 0) {
+                addToCartButton.classList.add('green');  // Add green class
+                addToCartButton.classList.remove('red'); // Remove red class
+                addToCartButton.disabled = false;        // Enable the button
+                addToCartButton.textContent = "In Stock"; // Set button text to "In Stock"
+            } else {
+                addToCartButton.classList.add('red');    // Add red class
+                addToCartButton.classList.remove('green'); // Remove green class
+                addToCartButton.disabled = true;         // Disable the button
+                addToCartButton.textContent = "Out of Stock"; // Set button text to "Out of Stock"
+            }
+
+            productDetails.style.display = "block";
+
+            // Remove active class from all product items
+            var productItems = document.getElementsByClassName('product-item');
+            for (var i = 0; i < productItems.length; i++) {
+                productItems[i].classList.remove('active');
+            }
+
+            // Add active class to the current product item
+            element.classList.add('active');
+        }
+
+
+
+        // Add mouse wheel scroll functionality
+        var productList = document.getElementById('productList');
+        productList.addEventListener('wheel', function (e) {
+            if (e.deltaY > 0) {
+                productList.scrollTop += 30;
+            } else {
+                productList.scrollTop -= 30;
+            }
+            e.preventDefault();
+        });
+        // Function to limit the description to 10 words
+        function truncateDescription(description) {
+            const words = description.split(' ');
+            if (words.length > 10) {
+                return words.slice(0, 10).join(' ') + '...'; // Add ellipsis if there are more than 10 words
+            }
+            return description; // Return the full description if it's 10 words or less
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById('searchInput');
+            const productList = document.getElementById('productList');
+
+            async function fetchProducts(query) {
+                const response = await fetch(`/api/products?q=${encodeURIComponent(query)}`);
+                if (response.ok) {
+                    const products = await response.json();
+                    return products;
+                } else {
+                    console.error('Failed to fetch products:', response.statusText);
+                    return [];
+                }
+            }
+
+            async function renderProducts(query = '') {
+                const products = await fetchProducts(query);
+
+                // Clear current product items
+                productList.innerHTML = `
+                    <h2>Product Results</h2>
+                `;
+
+                if (products.length > 0) {
+                    products.forEach(product => {
+                        const productItem = document.createElement('div');
+                        productItem.className = 'product-item';
+                        productItem.setAttribute('data-name', product.name);
+                        productItem.onmouseover = () => showPreview(productItem, product.name, product.description, `PKR ${product.price}`, product.image_url, product.id, product.stock);
+
+                        productItem.innerHTML = `
+                            <a class="product-item"  href="/product_details/${product.id}"><img src="${product.image_url}" alt="${product.name}" width="50" height="50">
+                            <div class="product-info">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <span class="price"> Price: PKR ${product.price}</span>
+                            </div></a>
+                        `;
+
+                        productList.appendChild(productItem);
+                    });
+                } else {
+                    productList.innerHTML += `
+                        <div>No products found.</div>
+                    `;
+                }
+            }
+
+            searchInput.addEventListener('keyup', function () {
+                const query = searchInput.value;
+                renderProducts(query);
+            });
+
+            // Initial render of all products
+            renderProducts();
+        });
+
+
+        // Get the elements
+        const productsButton = document.getElementById("productsButton");
+        const categoriesMenu = document.getElementById("categoriesMenu");
+        const arrowIcon = document.getElementById("arrowIcon");
+
+        // Toggle the menu when the products button is clicked
+        productsButton.addEventListener("click", function (event) {
+            // Prevent the click from propagating to the document
+            event.stopPropagation();
+
+            const isOpen = categoriesMenu.style.display === "block";
+            if (isOpen) {
+                categoriesMenu.style.display = "none";
+                arrowIcon.textContent = "keyboard_arrow_down"; // Arrow down icon
+            } else {
+                categoriesMenu.style.display = "block";
+                arrowIcon.textContent = "keyboard_arrow_up"; // Arrow up icon
+            }
+        });
+
+        // Close the menu if you click anywhere outside of the menu
+        document.addEventListener("click", function (event) {
+            if (!categoriesMenu.contains(event.target) && event.target !== productsButton) {
+                categoriesMenu.style.display = "none";
+                arrowIcon.textContent = "keyboard_arrow_down"; // Arrow down icon
+            }
+        });
+
+
+        /*document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.add-to-wishlist-btn');
+        
+            buttons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    
+                    const productId = this.dataset.productId;
+        
+                    fetch('/add_to_wishlist', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ product_id: productId }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message) {
+                                alert(data.message); // Success message
+                                this.innerHTML = '<i class="fas fa-heart"></i> Added';
+                            } else if (data.error) {
+                                alert(data.error); // Error message
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+        });*/
+        document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.wishlist-btn');
+
+    // Fetch wishlist from the backend
+    fetch('/check_wishlist')
+        .then(response => response.json())
+        .then(data => {
+            if (data.products) {
+                buttons.forEach(button => {
+                    const productId = button.dataset.productId;
+                    const icon = button.querySelector('.material-symbols-outlined');
+
+                    if (data.products.includes(parseInt(productId))) {
+                        // Mark as "in wishlist"
+                        icon.textContent = 'favorite'; // Filled heart
+                        
+                        icon.classList.add('material-symbols-outlined-filled');
+                        icon.classList.add('color-red'); // Optional styling for filled heart
+                    }
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching wishlist:', error));
+
+    // Add event listeners for toggling wishlist
+    buttons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const productId = this.dataset.productId;
+            const icon = this.querySelector('.material-symbols-outlined');
+
+            fetch('/toggle_wishlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ product_id: productId }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.in_wishlist) {
+                        // Mark as "in wishlist"
+                        icon.textContent = 'favorite'; // Filled heart
+                        icon.classList.add('color-red');
+                        icon.classList.add('material-symbols-outlined-filled'); // Optional styling for filled heart
+                    } else {
+                        // Remove "in wishlist" mark
+                        icon.textContent = 'favorite_border'; // Empty heart
+                        icon.classList.remove('color-red');
+                        icon.classList.remove('material-symbols-outlined-filled'); // Optional styling for filled heart
+                    }
+
+                    alert(data.message);
+                })
+                .catch(error => console.error('Error toggling wishlist:', error));
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function () {
+    const categoriesMenu = document.getElementById('categoriesMenu');
+
+    // Fetch categories dynamically
+    fetch('/categories')
+        .then(response => response.json())
+        .then(categories => {
+            let html = '<table>';
+            for (let i = 0; i < categories.length; i += 4) {
+                html += '<tr>';
+                for (let j = i; j < i + 4 && j < categories.length; j++) {
+                    html += `<td><a href="/${categories[j]}">${categories[j].toUpperCase()}</a></td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            categoriesMenu.innerHTML = html;
+        })
+        .catch(error => console.error('Error fetching categories:', error));
+});
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Show chatbox when the icon is clicked
+// Chatbox toggle
+    //const chatIcon = document.getElementById("chat-icon");
+    const chatIcon = document.querySelector(".profile-dropdown-list-item #chat-icon");
+
+    const chatboxContainer = document.getElementById("chatbox-container");
+    const closeChat = document.getElementById("close-chat");
+    const sendButton = document.getElementById("send-button");
+    const messageInput = document.getElementById("message-input");
+    const chatBody = document.getElementById("chat-body");
+
+    let lastMessageTime = null; // Track the timestamp of the last fetched message
+    let pollingInterval = null;
+
+// Show chatbox when the icon is clicked
+
+    function openChatbox() {
+        if (chatboxContainer) {
+            chatboxContainer.classList.remove("hidden");
+            console.log("Chatbox opened"); // Debug message
+        } else {
+            console.error("Chatbox container not found");
+        }
+        loadNewMessages(); // Load existing messages
+    }
+    chatIcon.addEventListener("click", () => {
+        loadChatMessages();
+        openChatbox() // Call the new reusable function
+        startPolling() // Start polling for new messages
+    });
+
+
+    function startPolling() {
+        if (pollingInterval) stopPolling(); // Prevent multiple intervals
+        pollingInterval = setInterval(() => {
+            loadNewMessages(); // Only fetch new messages
+        }, 2000); // Poll every 2 seconds
+    }
+
+// Hide chatbox
+    closeChat.addEventListener("click", () => {
+    chatboxContainer.classList.add("hidden");
+    stopPolling(); // Stop polling when the chatbox is closed
+    });
+
+    // Send a message
+    sendButton.addEventListener("click", async() => {
+    const userMessage = messageInput.value.trim();
+
+    if (!userMessage) {
+        alert("Please type a message before sending.");
+        return;
+    }
+
+// Fetch the chat room and send the message
+    const response = await fetch('/get_chat_room', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (response.ok) {
+        const roomData = await response.json();
+        const chatRoomId = roomData.chat_room_id;
+        const userId = roomData.user_id;
+        const senderType = 'user';
+
+        // Save the message
+        const sendResponse = await fetch('/save_message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_room_id: chatRoomId, message: userMessage, sender_type: senderType, user_id: userId }),
+        });
+
+        if (sendResponse.ok) {
+        appendMessage(userMessage, "user-message");
+        messageInput.value = ""; // Clear input field
+        } else {
+        alert("Failed to send the message.");
+        }
+    } else {
+        alert("Failed to get the chat room.");
+    }
+    });
+
+
+
+    async function loadNewMessages() {
+        try {
+            const response = await fetch(`/get_messages?last_message_time=${lastMessageTime || ''}`);
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach((message) => {
+                        const existingMessage = Array.from(chatBody.children).some(
+                            (child) => child.textContent === message.message
+                        );
+
+                        if (!existingMessage) {
+                            appendMessage(
+                                message.message,
+                                message.sender_type === 'user' ? 'user-message' : 'admin-message'
+                            );
+                            lastMessageTime = message.timestamp; // Update the timestamp
+                        }
+                    });
+                }
+            } else {
+                console.error("Failed to fetch new messages.");
+            }
+        } catch (error) {
+            console.error("Error while fetching new messages:", error);
+        }
+    }
+
+
+
+    async function loadChatMessages() {
+        try {
+            const response = await fetch('/get_messages?last_message_time=');
+
+            if (response.ok) {
+                const data = await response.json();
+                chatBody.innerHTML = ""; // Clear existing messages
+                data.messages.forEach((message) => {
+                    appendMessage(
+                        message.message,
+                        message.sender_type === 'user' ? 'user-message' : 'admin-message'
+                    );
+                });
+
+                // Only set the lastMessageTime if it's not already defined
+                if (!lastMessageTime && data.messages.length > 0) {
+                    lastMessageTime = data.messages[data.messages.length - 1].timestamp;
+                }
+            } else {
+                alert("Failed to load messages.");
+            }
+        } catch (error) {
+            console.error("Error loading messages:", error);
+        }
+    }
+
+
+
+    function appendMessage(message, className) {
+        console.log("Appending message:", message); // Debugging
+        const chatBox = document.querySelector("#chatbox-messages"); 
+        const messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        messageElement.className = className;
+        
+        // Check if the message already exists in the DOM
+        const existingMessage = Array.from(chatBody.children).some(
+            (child) => child.textContent === message
+        );
+
+        if (!existingMessage) {
+            chatBody.appendChild(messageElement);
+            chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom
+        }
+    }
+
+
+
+    // Stop polling
+    function stopPolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+    }
+});
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+    }
+    
+    #cartButton {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
+    
+    #cartMenu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 100%;
+        background-color: #f2f2f2;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(100%);
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    .cart-item {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid #ccc;
+    }
+    
+    .cart-item img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-right: 20px;
+    }
+    
+    .item-details {
+        flex: 1;
+    }
+    
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .quantity-control button {
+        background-color: #ccc;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+    
+    .quantity-control input {
+        width: 40px;
+        text-align: center;
+    }
+    
+    .cart-total {
+        padding: 20px;
+        text-align: right;
+    }
+    
+    .checkout {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+    </style>
+</head>
+<body>
+    <button id="cartButton">Cart</button>
+
+    <div id="cartMenu" class="hidden">
+        <div class="cart-item">
+            <img src="corsair_headset.jpg" alt="Corsair Void Elite RGB Wireless Headset">
+            <div class="item-details">
+                <p>Corsair Void Elite RGB Wireless...</p>
+                <p>$300.11</p>
+                <div class="quantity-control">
+                    <button class="minus">-</button>
+                    <input type="number" value="1">
+                    <button class="plus">+</button>
+                </div>
+                <button class="remove">Remove</button>
+            </div>
+        </div>
+        <div class="cart-total">
+            <p>Subtotal: $300.11 USD</p>
+        </div>
+        <button class="checkout">Checkout</button>
+    </div>
+
+    <script>
+      const cartButton = document.getElementById('cartButton');
+const cartMenu = document.getElementById('cartMenu');
+
+cartButton.addEventListener('click', () => {
+    cartMenu.classList.toggle('hidden');
+});
+    </script>
+</body>
+</html>

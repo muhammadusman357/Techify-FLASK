@@ -1,0 +1,655 @@
+{%  extends 'home-base.html' %}
+
+
+
+{% block meta %}
+
+
+
+
+
+{% endblock %}
+    
+{% block title %} 
+     Techify<!--{{selected}}-->
+{% endblock %}  
+
+
+
+
+{%  block container1 %}
+
+    <div class="carousel">
+        <div class="list">
+            {% for product in slider %}
+            <div class="item">
+                <div class="introduce">
+                    <div class="title">{{ product.name.split('|')[0].split('(')[0] }}</div>
+
+
+                    <div class="topic">{{ product.category.name }}</div> <!-- Category Name -->
+                    <div class="des">{{ product.description }}</div>
+                    <button class="seeMore">See More</button>
+                </div>
+                <!-- Image Carousel (First Image in Carousel) -->
+                <div class="image-carousel">
+                    {% if product_images[product.product_id] %}
+                        <img src="{{ product_images[product.product_id][0] }}" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+                <div class="detail">
+                    <div class="title">{{ product.name }}</div>
+                    <div class="des">{{ product.description }}</div>
+                    <br>
+                    <div class="checkout">
+                        <button>Add to Cart</button>
+                        <button>Buy Now</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="arrows">
+            <button id="prev">&lt;</button>
+            <button id="next">&gt;</button>
+        </div>
+        <button id="back">Back</button>
+    </div>
+
+
+{% endblock %}
+
+{% block content %}
+<div class="heading1">
+    <span>TOP</span> CATEGORIES
+</div>
+<div class="card-container">
+    <a href="/path-to-casing" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-6.jpg')}}" alt="Casing">
+            <div class="card-text">
+                <p>Casing</p>
+                <span class="product-count">20 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/path-to-headphones" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-3.jpg')}}" alt="Headphones">
+            <div class="card-text">
+                <p>Headphones</p>
+                <span class="product-count">15 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/path-to-keyboard" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-1.jpg')}}" alt="Keyboard">
+            <div class="card-text">
+                <p>Keyboard</p>
+                <span class="product-count">10 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/path-to-motherboard" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-2.jpg')}}" alt="Motherboard">
+            <div class="card-text">
+                <p>Motherboard</p>
+                <span class="product-count">8 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/path-to-mouse" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-5.jpg')}}" alt="Mouse">
+            <div class="card-text">
+                <p>Mouse</p>
+                <span class="product-count">12 Products</span>
+            </div>
+        </div>
+    </a>
+    <a href="/path-to-mouse-pad" class="card-link">
+        <div class="card">
+            <div class="card-overlay"></div>
+            <img src="{{url_for('static', filename = 'images/customer/category-4.jpg')}}" alt="Mouse Pad">
+            <div class="card-text">
+                <p>Mouse Pad</p>
+                <span class="product-count">5 Products</span>
+            </div>
+        </div>
+    </a>
+</div>
+<!-- end of categories -->
+
+<div class="price-container">
+    <div class="card">
+        <img alt="Image of GeForce RTX 3060Ti graphics card" height="300"
+            src="https://storage.googleapis.com/a1aa/image/w9E93e6OmV38fkzfffH7yRTMfcTS9vLf3KJRjjedQPjenLShnA.jpg"
+            width="600" />
+        <div class="card-content">
+            <p>
+                THE ULTIMATE PLAY
+            </p>
+            <h2>
+                GEFORCE RTX 3060TI
+            </h2>
+            <p class="price">
+                $599.99
+            </p>
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+    <div class="card">
+        <img alt="Image of AORUS ELITE AX AM5 motherboard" height="300"
+            src="https://storage.googleapis.com/a1aa/image/mIEnERJrVNr3CVxFNWMFeNqUqx21mC0ooQ0aUeSdCOoyFpwTA.jpg"
+            width="600" />
+        <div class="card-content">
+            <p>
+                POWER TO THE CORE
+            </p>
+            <h2>
+                AORUS ELITE AX AM5
+            </h2>
+            <p class="price">
+                $199.99
+            </p>
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+</div>
+
+<div class="top-selling">
+    <div class="header">
+        <h1>
+            <span>
+                BEST
+            </span>
+            SELLERS
+        </h1>
+        <div class="nav">
+            <a class="active" href="#" onclick="setActiveCategory('CPUs')">
+                CPUs
+            </a>
+            <a href="#" onclick="setActiveCategory('Graphics Cards')">
+                Graphics Cards
+            </a>
+            <a href="#" onclick="setActiveCategory('Memory')">
+                Memory
+            </a>
+            <a href="#" onclick="setActiveCategory('Monitors')">
+                Monitors
+            </a>
+        </div>
+        <a class="view-more" href="#">
+            View More
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+    <div class="products">
+        <div class="product">
+            <h2>
+                HEADSET
+            </h2>
+            
+            <img alt="HyperX Cloud Alpha" height="200"
+                src="{{url_for('static', filename = 'images/customer/headset/hyperx_cloud_alpha_black.png')}}"
+                width="200" />
+                <div class="discount">
+                    SAVE 58%
+                </div>
+            <h3>
+                HyperX Cloud Alpha...
+            </h3>
+            <div class="reviews">
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <span>
+                    No reviews
+                </span>
+            </div>
+            <div class="price-stock">
+                <div class="price">
+                    $50.00
+                </div>
+                <div class="stock">
+                    In Stock
+                </div>
+            </div>
+        </div>
+        <div class="product">
+            <h2>
+                HEADSET
+            </h2>
+            
+            <img alt="Corsair Void Elite RGB Wireless Headset" height="200"
+                src="{{url_for('static', filename = 'images/customer/headset/corsair.webp')}}"
+                width="200" />
+                <div class="discount">
+                    SAVE 58%
+                </div>
+            <h3>
+                Corsair Void Elite RGB Wireless...
+            </h3>
+            <div class="reviews">
+                <i class="fas fa-star">
+                </i>
+                <i class="fas fa-star">
+                </i>
+                <i class="fas fa-star">
+                </i>
+                <i class="fas fa-star">
+                </i>
+                <i class="fas fa-star">
+                </i>
+                <span>
+                    1 review
+                </span>
+            </div>
+            <div class="price-stock">
+                <div class="price">
+                    $300.11
+                </div>
+                <div class="stock">
+                    In Stock
+                </div>
+            </div>
+            <div class="old-price">
+                $727.02
+            </div>
+        </div>
+        <div class="product">
+            <h2>
+                HEADSET
+            </h2>
+            
+            <img alt="Microsoft Xbox Elite Wireless Controller" height="200"
+                src="{{url_for('static', filename = 'images/customer/headset/product-17-2.webp')}}"
+                width="200" />
+            <div class="discount">
+                SAVE 94%
+            </div>
+                <h3>
+                Microsoft Xbox Elite Wireless...
+            </h3>
+            <div class="reviews">
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <span>
+                    No reviews
+                </span>
+            </div>
+            <div class="price-stock">
+                <div class="price">
+                    $31.08
+                </div>
+                <div class="stock">
+                    In Stock
+                </div>
+            </div>
+            <div class="old-price">
+                $546.70
+            </div>
+        </div>
+        <div class="product">
+            <h2>
+                CHAIR
+            </h2>
+            
+            <img alt="Gaming Chair For Gamers With Blue and Black Design" height="200"
+                src="{{url_for('static', filename = 'images/customer/headset/chair.webp')}}"
+                width="200" />
+                <div class="discount">
+                    SAVE 20%
+                </div>
+            <h3>
+                Gaming Chair For Gamers With...
+            </h3>
+            <div class="reviews">
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <i class="far fa-star">
+                </i>
+                <span>
+                    No reviews
+                </span>
+            </div>
+            <div class="price-stock">
+                <div class="price">
+                    $560.00
+                </div>
+                <div class="stock">
+                    In Stock
+                </div>
+            </div>
+            <div class="old-price">
+                $700.00
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="section section-logo">
+    <div class="line-container">
+        <div class="line2" aria-hidden="true"></div> <!-- Decorative element -->
+    </div>
+    <div class="container01">
+        <div class="flex-container">
+            <div class="section-header text-left">
+                <div class="title-header">
+                    <span>SHOP BY </span><br>POPULAR<br> BRANDS
+                </div>
+            </div>
+            <div class="logo-box">
+                <div class="scroller">
+                    <div class="scroller__inner">
+                        <div class="ap-logolist ap-logolist--carousel" role="region" aria-label="Popular Brands Carousel">
+                            <div class="ap-logolist__list">
+                                <!-- First loop for vendors -->
+                                {% for vendor in vendors %}
+                                    <div class="ap-logolist__item">
+                                        <a href="#">
+                                            <img src="{{ url_for('static', filename='images/vendors/' + vendor.name + '.svg') }}" alt="{{ vendor.name }}" class="ap-logolist__image" loading="lazy">
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                                <!-- Duplicated loop for infinite effect -->
+                                {% for vendor in vendors %}
+                                    <div class="ap-logolist__item">
+                                        <a href="#">
+                                            <img src="{{ url_for('static', filename='images/vendors/' + vendor.name + '.svg') }}" alt="{{ vendor.name }}" class="ap-logolist__image" loading="lazy">
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="line-container">
+        <div class="line" aria-hidden="true"></div> <!-- Decorative element -->
+    </div>
+</section>
+
+
+
+
+
+<div class="new-price-container">
+    <div class="card">
+        
+        <img alt="X6 GAMING MOUSE" height="300"
+            src="{{url_for('static', filename = 'images/customer/headset/Mask_group_54_1.jpg')}}"
+            width="600" />
+        
+        <div class="card-content">
+            <h3 class="heading heading-title h6" reveal="">ERGONOMIC PRECISION</h3>
+            <h2 class="heading heading-center h3" reveal="">
+                <span>X6 GAMING 
+            <br>MOUSE</span>
+            </h2>
+            <p class="heading description red-price" reveal="">
+                <span>$49.99</span>   
+                <span></span>
+            </p>
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+    <div class="card2">
+        <img alt="Image of NXSYS AERO GAMING CHAIR" 
+            src="{{url_for('static', filename = 'images/customer/headset/Mask_group_55_1.jpg')}}"
+            />
+        <div class="card-content">
+            <h3 class="heading heading-title h6" reveal="">FUTURE PERFECT</h3>
+            <span class="mid">NXSYS AERO
+                <br>
+                GAMING CHAIR</span>
+        
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+    <div class="card">
+        <img alt="Image of AORUS ELITE AX AM5 motherboard" height="300"
+            src="{{url_for('static', filename = 'images/customer/headset/Mask_group_56_1.jpg')}}"
+            width="600" />
+        <div class="card-content">
+            <h3 class="heading heading-title h6" reveal="">VOLCANIC SOUND</h3>
+            <h2 class="heading heading-center h3" reveal="">
+                <span>E910 5.8G 
+            <br>Wireless <br>Headset</span>
+            </h2>
+            <p class="heading description green-price" reveal="">
+                <span>$69.99</span>   
+                <span></span>
+            </p>
+        
+        </div>
+        <a class="shop-now" href="#">
+            Shop Now
+            <i class="fas fa-chevron-right danger">
+            </i>
+        </a>
+    </div>
+</div>
+<div class=" light-back">
+<section class="section section-logo">
+<div class="features">
+    <div class="feature-item">
+        <i class="fas fa-shipping-fast"></i>
+        <h3>Worldwide Shipping</h3>
+        <p>Enjoy free delivery on every order.</p>
+    </div>
+    <div class="divider"></div>
+    <div class="feature-item">
+        <i class="fas fa-undo-alt"></i>
+        <h3>Money-Back Guarantee</h3>
+        <p>30-day money back guarantee.</p>
+    </div>
+    <div class="divider"></div>
+    <div class="feature-item">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Secure Payments</h3>
+        <p>Secure checkout verified</p>
+    </div>
+    <div class="divider"></div>
+    <div class="feature-item">
+        <i class="fas fa-headset"></i>
+        <h3>Online Customer Service</h3>
+        <p>Call our expert <span class="danger" >(084) 123 - 456 88</span></p>
+    </div>
+    
+</div>
+<div class="line-container">
+    <div class="line"></div>
+</div>
+<br>
+<div class="customer-container">
+    <div class="customer-header">
+        <h1>CUSTOMER <span>REVIEW</span></h1>
+        <div class="rating-container">
+            <div class="rating">
+                4.8
+                <i>src="{{url_for('static', filename = 'images/customer/rating')}}"</i>
+            </div>
+            <div class="reviews">
+                <a href="#">View All 7,185 Reviews</a>
+            </div>
+        </div>
+    </div>
+    <!-- Slider buttons -->
+    
+    
+    <div class="reviews-container">
+        <div class="slider-container">
+            <!-- Add your slider content here -->
+            <button class="slider-button left"><span class="material-symbols-outlined">arrow_back_ios</span></button>
+        </div>
+        
+        <div class="review-card">
+            <h2>Great keyboard!</h2>
+            <p>Love the way it feels! I've been using it for work. I feel like I type faster and more accurate because of the way the switches respond to my fingers. Great keyboard!</p>
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="author">
+                <div>
+                    Gregory D<br/>
+                    28 Jun 2023
+                </div>
+                <img src="https://storage.googleapis.com/a1aa/image/vYdcZLhfrWRuQqzbJjebA4Bf2ERmQd2fDHiuYhVvzFbeMTJeE.jpg" alt="Image of a colorful keyboard">
+            </div>
+        </div>
+        <div class="review-card">
+            <h2>Love the Sound</h2>
+            <p>These guys are top notch. Bought two PCs from them this year. They both arrived promptly and perfectly built and protected.</p>
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="author">
+                <div>
+                    Melvin N.<br/>
+                    28 Jun 2024
+                </div>
+                <img src="https://storage.googleapis.com/a1aa/image/q7lITrjrHhofIqPcNcbPry2ZuOHxCpOyydZFep1HA75pZKxTA.jpg" alt="Image of a headset">
+            </div>
+        </div>
+        
+        <div class="review-card">
+            <h2>Love the Sound</h2>
+            <p>These guys are top notch. Bought two PCs from them this year. They both arrived promptly and perfectly built and protected.</p>
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="author">
+                <div>
+                    Melvin N.<br/>
+                    28 Jun 2024
+                </div>
+                <img src="https://storage.googleapis.com/a1aa/image/q7lITrjrHhofIqPcNcbPry2ZuOHxCpOyydZFep1HA75pZKxTA.jpg" alt="Image of a headset">
+            </div>
+        </div>
+
+        <div class="slider-container">
+
+            <button class="slider-button right"><span class="material-symbols-outlined">arrow_forward_ios</span></button>
+        </div>
+
+    </div>
+</div>
+
+
+</section></div>
+<script>
+    let nextButton = document.getElementById('next');
+let prevButton = document.getElementById('prev');
+let carousel = document.querySelector('.carousel');
+let listHTML = document.querySelector('.carousel .list');
+let seeMoreButtons = document.querySelectorAll('.seeMore');
+let backButton = document.getElementById('back');
+
+nextButton.onclick = function() {
+    showSlider('next');
+};
+
+prevButton.onclick = function() {
+    showSlider('prev');
+};
+
+let unAcceppClick;
+
+const showSlider = (type) => {
+    nextButton.style.pointerEvents = 'none';
+    prevButton.style.pointerEvents = 'none';
+
+    carousel.classList.remove('next', 'prev');
+    let items = document.querySelectorAll('.carousel .list .item');
+    if(type === 'next') {
+        listHTML.appendChild(items[0]);
+        carousel.classList.add('next');
+    } else {
+        listHTML.prepend(items[items.length - 1]);
+        carousel.classList.add('prev');
+    }
+
+    clearTimeout(unAcceppClick);
+    unAcceppClick = setTimeout(() => {
+        nextButton.style.pointerEvents = 'auto';
+        prevButton.style.pointerEvents = 'auto';
+    }, 2000);
+};
+
+seeMoreButtons.forEach((button) => {
+    button.onclick = function() {
+        carousel.classList.remove('next', 'prev');
+        carousel.classList.add('showDetail');
+    };
+});
+
+backButton.onclick = function() {
+    carousel.classList.remove('showDetail');
+};
+
+
+
+
+
+</script>
+{% endblock %}

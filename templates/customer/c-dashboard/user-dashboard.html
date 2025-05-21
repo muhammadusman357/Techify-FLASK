@@ -1,0 +1,394 @@
+{%  extends '/customer/c-dashboard/user-dashboard-base.html' %}
+
+
+
+{% block option1 %}
+
+
+
+
+
+{% endblock %}
+    
+{% block title %} 
+    {{selected.capitalize()}}
+{% endblock %}  
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer/chatbox.css') }}">
+    {% endblock %}
+
+
+{%  block content %}
+    
+        <div class="date">
+            <label for="dateInput">Date:</label>
+            <input type="date" id="dateInput" name="date" title="Choose a date" placeholder="YYYY-MM-DD"
+                value="{{ current_date }}">
+        </div>
+
+
+    <div class="insights">
+        <div class="user-card sales">
+            <div class="user-profile">
+                <div class="profile-header">
+                    
+                    <div class="profile-info">
+                        <h2>{{ session['fullname'] }}</h2>
+                        
+                        <a href="/customer-info" ><span class="material-symbols-outlined edit">edit_square</span></a>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <ul>
+                        <li><strong>Account Details</strong></li>
+                        <li><strong>Username:</strong> {{ session['username'] }}</li>
+                        <li><strong>Email:</strong> {{ user.email }}</li>
+                        <li><strong>Phone Number:</strong> {{  user.phone_number }}</li>
+                        <li><strong>Date of Birth:</strong> {{  user.date_of_birth or 'N/A' }}</li>
+                        <li><strong>Gender:</strong> {{  user.gender or 'N/A' }}</li>
+                    </ul>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        
+        <!-- ------------------ End of Sales ------------------ -->
+        
+        <!-- ------------------ End of Expenses ------------------ -->
+        <div class="income">
+            <span class="material-symbols-outlined">bar_chart</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>Total Expenses</h3>
+                    <h1>$16,160</h1>
+                </div>
+                <div class="progress">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <p>62%</p> <!-- Corrected closing tag -->
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 Hours</small>
+        </div>
+        <!-- ------------------ End of Income ------------------ -->
+
+
+    </div>
+    <!-- ------------------ End of Insights ------------------ -->
+    
+    <div class="recent-orders">
+        <h2>Recent Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order No.</th>
+                    <th>Order Date</th>
+                    <th>Shipping Address</th>
+                    <th>Billing Address</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order, shipping_street, shipping_city, shipping_state, shipping_country, shipping_postal_code,
+                    billing_street, billing_city, billing_state, billing_country, billing_postal_code in recent_orders %}
+           <tr>
+               <td>{{ order.order_id }}</td>
+               <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+               <td>
+                   {{ shipping_street }}, {{ shipping_city }}, {{ shipping_state }}, {{ shipping_country }} - {{ shipping_postal_code }}
+               </td>
+               <td>
+                   {{ billing_street }}, {{ billing_city }}, {{ billing_state }}, {{ billing_country }} - {{ billing_postal_code }}
+            </td>
+            <td>PKR {{ order.total_price }}</td>
+            <td>{% if order.status.lower() == "pending" %}
+                <div class="warning">{{ order.status.capitalize() }}</div>
+            {% else %}
+                <div class="success">{{ order.status.capitalize() }}</div>
+            {% endif %}</td>
+            
+            
+               <td><a href="/order_details/{{ order.order_id }}" class="details-link">
+                <span class="material-symbols-outlined">chevron_right</span>
+                </a>
+            </td>
+           </tr>
+           {% else %}
+           <tr>
+               <td colspan="7" class="text-center">No recent orders found.</td>
+           </tr>
+            {% endfor %}
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+        <a href="/customer-orders">Show All</a>
+    </div>
+    
+        
+    </main>
+    <!-- ------------------ End of Main ------------------ -->
+    
+    {% endblock %}
+
+    {% block content2 %}
+
+    
+
+
+      
+        <!-- END OF TOP --> 
+        <div class="recent-updates">
+            <h2>Recent Updates</h2>
+            <div class="updates">
+                <div class="update">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <div class="message">
+                    <p><b>RTX 3060 TI</b> Delivered to your location.</p>
+                    <small class="text-muted">2 Minutes Ago</small>
+                    </div>
+                </div>
+                <div class="update">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <div class="message">
+                    <p><b>RGB CASE</b> Delivered to your location.</p>
+                    <small class="text-muted">5 Minutes Ago</small>
+                    </div>
+                </div>
+                <div class="update">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <div class="message">
+                    <p><b>RGB RAM</b> Delivered to your location.</p>
+                    <small class="text-muted">10 Minutes Ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+
+
+    
+        
+        
+
+ <!-- END OF Recent Updates -->
+
+<div class="sales-analytics">
+    <h2>Customer Support</h2>
+    <div class="item online">
+        <ul class="profile-dropdown-list">
+            <li class="profile-dropdown-list-item">
+                <a href="#" id="chat-icon">
+                    <i class="material-symbols-outlined">support_agent</i>
+                    Customer Support
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    
+    
+    </div>
+    <!-- Chat Box -->
+    <div id="chatbox-container" class="chatbox hidden">
+        <div class="chat-header">
+          <span>Customer Support</span>
+          <i class="material-symbols-outlined close-chat" id="close-chat">close</i>
+        </div>
+        <div class="chat-body" id="chat-body">
+          <!-- Chat messages will appear here -->
+        </div>
+        <div class="chat-footer">
+          <input type="text" id="message-input" placeholder="Type your message..." />
+          <button id="send-button">Send</button>
+        </div>
+    </div>
+    
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Show chatbox when the icon is clicked
+    // Chatbox toggle
+        //const chatIcon = document.getElementById("chat-icon");
+        const chatIcon = document.querySelector(".profile-dropdown-list-item #chat-icon");
+    
+        const chatboxContainer = document.getElementById("chatbox-container");
+        const closeChat = document.getElementById("close-chat");
+        const sendButton = document.getElementById("send-button");
+        const messageInput = document.getElementById("message-input");
+        const chatBody = document.getElementById("chat-body");
+    
+        let lastMessageTime = null; // Track the timestamp of the last fetched message
+        let pollingInterval = null;
+    
+    // Show chatbox when the icon is clicked
+    
+        function openChatbox() {
+            if (chatboxContainer) {
+                chatboxContainer.classList.remove("hidden");
+                console.log("Chatbox opened"); // Debug message
+            } else {
+                console.error("Chatbox container not found");
+            }
+            loadNewMessages(); // Load existing messages
+        }
+        chatIcon.addEventListener("click", () => {
+            loadChatMessages();
+            openChatbox() // Call the new reusable function
+            startPolling() // Start polling for new messages
+        });
+    
+    
+        function startPolling() {
+            if (pollingInterval) stopPolling(); // Prevent multiple intervals
+            pollingInterval = setInterval(() => {
+                loadNewMessages(); // Only fetch new messages
+            }, 2000); // Poll every 2 seconds
+        }
+    
+    // Hide chatbox
+        closeChat.addEventListener("click", () => {
+        chatboxContainer.classList.add("hidden");
+        stopPolling(); // Stop polling when the chatbox is closed
+        });
+    
+        // Send a message
+        sendButton.addEventListener("click", async() => {
+        const userMessage = messageInput.value.trim();
+    
+        if (!userMessage) {
+            alert("Please type a message before sending.");
+            return;
+        }
+    
+    // Fetch the chat room and send the message
+        const response = await fetch('/get_chat_room', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        });
+    
+        if (response.ok) {
+            const roomData = await response.json();
+            const chatRoomId = roomData.chat_room_id;
+            const userId = roomData.user_id;
+            const senderType = 'user';
+    
+            // Save the message
+            const sendResponse = await fetch('/save_message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_room_id: chatRoomId, message: userMessage, sender_type: senderType, user_id: userId }),
+            });
+    
+            if (sendResponse.ok) {
+            appendMessage(userMessage, "user-message");
+            messageInput.value = ""; // Clear input field
+            } else {
+            alert("Failed to send the message.");
+            }
+        } else {
+            alert("Failed to get the chat room.");
+        }
+        });
+    
+    
+    
+        async function loadNewMessages() {
+            try {
+                const response = await fetch(`/get_messages?last_message_time=${lastMessageTime || ''}`);
+    
+                if (response.ok) {
+                    const data = await response.json();
+    
+                    if (data.messages && data.messages.length > 0) {
+                        data.messages.forEach((message) => {
+                            const existingMessage = Array.from(chatBody.children).some(
+                                (child) => child.textContent === message.message
+                            );
+    
+                            if (!existingMessage) {
+                                appendMessage(
+                                    message.message,
+                                    message.sender_type === 'user' ? 'user-message' : 'admin-message'
+                                );
+                                lastMessageTime = message.timestamp; // Update the timestamp
+                            }
+                        });
+                    }
+                } else {
+                    console.error("Failed to fetch new messages.");
+                }
+            } catch (error) {
+                console.error("Error while fetching new messages:", error);
+            }
+        }
+    
+    
+    
+        async function loadChatMessages() {
+            try {
+                const response = await fetch('/get_messages?last_message_time=');
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    chatBody.innerHTML = ""; // Clear existing messages
+                    data.messages.forEach((message) => {
+                        appendMessage(
+                            message.message,
+                            message.sender_type === 'user' ? 'user-message' : 'admin-message'
+                        );
+                    });
+    
+                    // Only set the lastMessageTime if it's not already defined
+                    if (!lastMessageTime && data.messages.length > 0) {
+                        lastMessageTime = data.messages[data.messages.length - 1].timestamp;
+                    }
+                } else {
+                    alert("Failed to load messages.");
+                }
+            } catch (error) {
+                console.error("Error loading messages:", error);
+            }
+        }
+    
+    
+    
+        function appendMessage(message, className) {
+            console.log("Appending message:", message); // Debugging
+            const chatBox = document.querySelector("#chatbox-messages"); 
+            const messageElement = document.createElement("div");
+            messageElement.textContent = message;
+            messageElement.className = className;
+            
+            // Check if the message already exists in the DOM
+            const existingMessage = Array.from(chatBody.children).some(
+                (child) => child.textContent === message
+            );
+    
+            if (!existingMessage) {
+                chatBody.appendChild(messageElement);
+                chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom
+            }
+        }
+    
+    
+    
+        // Stop polling
+        function stopPolling() {
+        if (pollingInterval) {
+            clearInterval(pollingInterval);
+            pollingInterval = null;
+        }
+        }
+    });
+</script>
+{% endblock %}

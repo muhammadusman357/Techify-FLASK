@@ -1,0 +1,343 @@
+.search-orders {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.search-orders i {
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: transform 0.3s;
+}
+
+/* Rotate the arrow when active */
+.search-orders i.down-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown menu styling */
+#searchDropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 150px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: var(--color-white);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+#searchDropdown .dropdown-item {
+    background-color: var(--color-white);
+    display: block;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: var(--color-dark);
+    text-decoration: none;
+}
+
+#searchDropdown .dropdown-item:hover {
+    background-color: var(--color-background-hover);
+}
+
+/* Styling for selected criteria in search box */
+#searchAdmins::placeholder {
+    font-style: italic;
+}
+
+
+
+
+/* ====================== orders Table ====================== */
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Ensure it takes full width of the container */
+    padding-bottom: 10px;
+}
+
+
+.view-all-btn {
+    background-color: #f0f0f0;
+    border: none;
+    color: #5C5F6A; /* Text color */
+    padding: 8px 16px;
+    border-radius: 20px; /* Rounded corners for the button */
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.orders .close-btn2 {
+
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.close-btn2 {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+}
+
+.orders hr{
+    color: var(--color-dark)
+}
+
+.orders .table-header thead a{
+    display: inline;
+}
+
+.view-all-btn:hover {
+    background-color: #e0e0e0; /* Slightly darker on hover */
+}
+
+.line{
+    height: 1%;
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    margin: 20px 0 20px 0 ;
+}
+.orders th, .orders td {
+    padding: 15px;
+    text-align: left;
+    
+    font-size: 14px;
+    color: var(--color-dark);
+    border-bottom: 1px solid #e0e0e0; /* Add a bottom border for rows */
+}
+.orders td {
+font-size: 12px;
+}
+
+
+.orders th {
+    border-top: 1px solid #e0e0e0; /* Add a bottom border for rows */
+    font-weight: bold;
+    background-color: none; /* Optional: light background for headers */
+}
+
+
+
+
+.orders td a{
+    background: none;
+    color: var(--color-dark);
+}
+
+.orders table {
+    width: 100%; /* Ensure the table takes the full width of the products container */
+    border-collapse: collapse; /* Remove space between table cells */
+}
+
+
+.orders {
+    background: var(--color-white);
+    width: 100%; /* Set the width to 100% for the table */
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: left;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    margin: 2rem 0 8.8rem;
+}
+
+.admin{
+    
+    background: var(--color-white);
+    width: 100%; /* Set the width to 100% for the table */
+    border-top-right-radius: var(--card-border-radius);
+    border-top-left-radius: var(--card-border-radius);
+    text-align: left;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    
+
+    margin-bottom: 0;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+
+}
+
+.admin:hover{
+    box-shadow: none;
+}
+
+.heading-small {
+  font-size: .85rem;
+  padding-top: .25rem;
+  padding-bottom: .5rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.admincard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    border: 1px solid rgba(0, 0, 0, .05);
+    border-radius: var(--card-border-radius);
+    background-color: var(--card-admin);
+    background-clip: border-box;
+    margin-bottom: 50px;
+    margin-top: 40px;
+}
+
+  
+.admincard2 {
+    padding: var(--card-padding);
+    text-align: left;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+.admincard2:hover {
+    box-shadow: none;
+  }
+
+
+.orders:hover {
+    box-shadow: none;
+}
+
+.orders h3 {
+    color: var(--color-primary-d);
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.orders .table-header a {
+
+    background-color: var(--color-primary-d);
+    color: var(--color-background);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+}
+
+.orders .table-header a:hover {
+    border: 1px solid var(--color-primary-d);
+    background-color: var(--color-background);
+    color: var(--color-primary-d);
+}
+
+.orders h2{
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--color-dark);
+}
+
+.tablecontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.tablecontainer h2{
+    transform: translateY(20%);
+
+}
+
+.search-orders {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #6b6b6b;
+}
+.search-orders i {
+    margin-right: 10px;
+}
+.search-orders input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #6b6b6b;
+    background-color: transparent;
+}
+
+/* Dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown button */
+.dropbtn {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.dropdown-content {
+    display: none; /* Hidden by default */
+    position: absolute;
+    right: 0;
+    background-color: var(--color-light);
+    min-width: 120px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: var(--border-radius-1);
+    padding: 5px 0;
+  }
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Show the dropdown on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+.orders-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}

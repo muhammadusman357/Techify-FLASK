@@ -1,0 +1,60 @@
+{%  extends '/admin/a-dashboard/base_sidebar.html' %}
+
+
+
+{% block option1 %}
+
+
+
+{% endblock %}
+
+{% block title %}
+{{selected}}
+{% endblock %}
+
+{% block content %}
+<div class="categories">
+    <h1>
+        Add Category
+    </h1>
+    <form method="POST" action="/addcategory">
+        <!--{% if category %}
+            Hidden input for category ID when editing 
+            <input type="hidden" name="category_id" value="{{ category.category_id }}">
+        {% endif %}-->
+        
+        <div class="form-group">
+            <label for="name">Category Name</label>
+            <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                value="{{ category.name if category else '' }}" 
+                placeholder="Enter category name" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+                id="description" 
+                name="description" 
+                placeholder="Enter category description" 
+                required>{{ category.description if category else '' }}
+            </textarea>
+        </div>
+
+        <button class="btn btn-back" type="button" onclick="history.back()">
+            Back
+        </button>
+        <button class="btn" type="submit">
+            Save Category
+        </button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block content2 %}
+
+{% endblock %}

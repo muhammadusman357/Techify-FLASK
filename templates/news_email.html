@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Our Newsletter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #444;
+        }
+        p {
+            margin: 10px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://res.cloudinary.com/ditkr99ht/image/upload/v1731834272/dh6edj63phtkrl2nyxyw.png" alt="Company Logo">
+        
+    </div>
+    <div class="email-container">
+        <h1>Hello, {{ username }}!</h1>
+        <p>Thank you for subscribing to our newsletter. We're excited to have you on board!</p>
+        <p>Stay tuned for the latest updates, offers, and more.</p>
+        <p>Best regards,<br>Team Techify</p>
+        <div class="footer">
+            <p>If you have any questions, feel free to contact us at support@techify.com.</p>
+        </div>
+    </div>
+</body>
+</html>

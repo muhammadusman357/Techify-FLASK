@@ -1,0 +1,69 @@
+{%  extends '/admin/a-dashboard/base_sidebar.html' %}
+
+{% block title %}
+    Update Category
+{% endblock %}
+
+{% block content %}
+<div class="categories">
+    <h1>Update Category</h1>
+
+    <form id="updateCategoryForm" data-category-id="{{ category.category_id }}">
+        <div class="form-group">
+            <label for="name" class="form-label">Category Name:</label>
+            <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                class="form-control" 
+                value="{{ category.name }}" 
+                required
+            >
+        </div>
+        <div class="form-group">
+            <label for="description" class="form-label">Description:</label>
+            <textarea 
+                id="description" 
+                name="description" 
+                class="form-control" 
+                rows="5" 
+                required>{{ category.description }}</textarea>
+        </div>
+        <button class="btn btn-back" type="button" onclick="history.back()">
+            Back
+        </button>
+        <button class="btn" type="submit">
+            Update Category
+        </button>
+    </form>  
+</div>
+
+<script>
+    document.querySelector("#updateCategoryForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(this);
+    const categoryId = this.getAttribute("data-category-id"); // Get category ID from the form
+
+    fetch(`/updatecategory/${categoryId}`, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message); // Show success message
+            console.log("Updated Category:", data.category); // Log updated category
+            window.location.href = "/categories"; // Redirect to categories.html
+        } else {
+            alert(data.message); // Show error message
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An unexpected error occurred.");
+    });
+});
+
+</script>
+{% endblock %}

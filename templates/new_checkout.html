@@ -1,0 +1,602 @@
+{% extends 'home-base.html' %}
+
+{% block head %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+<style>
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-checkout flex flex-wrap lg:flex-nowrap justify-center items-start">
+    <div class="bg-whiter p-8 rounded-lg shadow-lg w-full lg:w-2/3">
+        <div class="w-2/3">
+            <!-- Progress Bar -->
+            <div class="progress-bar2">
+                <div class="progress-line" id="progress-line" style="width: 0%;">
+                </div>
+                <div class="progress-step">
+                    <div class="progress-dot active" id="step-1-dot">
+                    </div>
+                    <p class="progress-text active" id="step-1-text">
+                        Address
+                    </p>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-dot" id="step-2-dot">
+                    </div>
+                    <p class="progress-text" id="step-2-text">
+                        OrderDetails
+                    </p>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-dot" id="step-3-dot">
+                    </div>
+                    <p class="progress-text" id="step-3-text">
+                        Payment
+                    </p>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-dot" id="step-4-dot">
+                    </div>
+                    <p class="progress-text" id="step-4-text">
+                        Finish
+                    </p>
+                </div>
+            </div>
+            <!-- Multi-Step Form -->
+            <form id="checkout-form">
+                <!-- Step 1 -->
+                <!-- Step 1: Personal Info & Address -->
+                <div class="step text-col" id="step_1">
+                    <!-- Personal Info Section -->
+                    <h2 class="text-xl font-bold mb-4">Personal Info</h2>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2">First Name</label>
+                            <p id="user_firstname" class="backn w-full p-2 border rounded-lg bg-gray-100">{{ user.first_name }}</p>
+                        </div>
+                        <div>
+                            <label class="block mb-2">Last Name</label>
+                            <p id="user_lastname" class="w-full p-2 border rounded-lg bg-gray-100">{{ user.last_name }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Email</label>
+                        <p class="w-full p-2 border rounded-lg bg-gray-100">{{ user.email }}</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2" for="phoneNumber">Phone Number</label>
+                        <input class="w-full p-2 border rounded-lg" id="phoneNumber" name="phoneNumber"
+                            placeholder="Phone Number" required="" type="text" value="{{phone_number}}"/>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2" for="saved_addresses">
+                            Select Saved Address
+                        </label>
+                        <select id="saved_addresses" name="saved_addresses" class="w-full p-2 border rounded-lg"
+                            onchange="populateAddressFields()">
+                            <option value="" selected>Choose a saved address</option>
+                            {% for address in addresses %}
+                            <option value="{{ address.address_id }}" data-street="{{ address.street }}"
+                                data-city="{{ address.city }}" data-state="{{ address.state }}"
+                                data-postal="{{ address.postal_code }}" data-country="{{ address.country }}">
+                                {{ address.street }}, {{ address.city }}, {{ address.state }}, {{ address.postal_code
+                                }}, {{ address.country }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Add an info box for Shipping Address -->
+                    <h3 class="text-xl font-bold mb-4">Shipping Address</h3>
+                    <div class="mb-4">
+                        <label class="block mb-2">
+                            Street
+                        </label>
+                        <input class="w-full p-2 border rounded-lg" id="street" name="street" placeholder="Street"
+                            required="" type="text" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2">
+                                City
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="city" name="city" placeholder="City"
+                                required="" type="text" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">
+                                State
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="state" name="state" placeholder="State"
+                                required="" type="text" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2">
+                                Postal Code
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="postal_code" name="postal_code"
+                                placeholder="Postal Code" required="" type="text" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">
+                                Country
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="country" name="country"
+                                placeholder="Country" required="" type="text" />
+                        </div>
+                    </div>
+                    <!-- Billing Address -->
+                    <h3 class="text-xl font-bold mb-4">
+                        Billing Address
+                    </h3>
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input class="mr-2" id="same_as_shipping" onclick="copyAddress()" type="checkbox" />
+                            <span>
+                                Same as Shipping Address
+                            </span>
+                        </label>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">
+                            Street
+                        </label>
+                        <input class="w-full p-2 border rounded-lg" id="billing_street" name="billing_street"
+                            placeholder="Street" type="text" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2">
+                                City
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="billing_city" name="billing_city"
+                                placeholder="City" type="text" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">
+                                State
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="billing_state" name="billing_state"
+                                placeholder="State" type="text" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2">
+                                Postal Code
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="billing_postal_code"
+                                name="billing_postal_code" placeholder="Postal Code" type="text" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">
+                                Country
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="billing_country" name="billing_country"
+                                placeholder="Country" type="text" />
+                        </div>
+                    </div>
+                </div>
+                <!-- Step 2: Confirmation -->
+                <div class="step hidden" id="step-2">
+                    <h2 class="text-xl font-bold mb-4">
+                        Confirmation
+                    </h2>
+                    <p class="mb-4">
+                        Please review your order details before proceeding to payment:
+                    </p>
+                    <h3 class="text-lg font-bold mb-4">
+                        Order Summary
+                    </h3>
+                    <div class="mb-6 textgr" id="order-summary">
+                        <!-- Order summary will be dynamically populated here -->
+                    </div>
+                    <h3 class="text-lg font-bold">
+                        Personal Info
+                    </h3>
+                    <div class="mb-4 textgr" id="confirm-personal-info">
+                        <!-- Personal Info will be dynamically populated here -->
+                    </div>
+                    <h3 class="text-lg font-bold">
+                        Shipping Address
+                    </h3>
+                    <div class="mb-4 textgr" id="confirm-shipping-address">
+                        <!-- Shipping Address will be dynamically populated here -->
+                    </div>
+                    <h3 class="text-lg font-bold">
+                        Billing Address
+                    </h3>
+                    <div class="mb-4 textgr" id="confirm-billing-address">
+                        <!-- Billing Address will be dynamically populated here -->
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="step hidden payment22" id="step-3">
+                    <h2 class="text-xl font-bold mb-4">
+                        Payment Info
+                    </h2>
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input class="mr-2" id="cash_on_delivery" name="payment_method" type="radio"
+                                value="cash_on_delivery" />
+                            <span>
+                                Cash on Delivery
+                            </span>
+                        </label>
+                    </div>
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input class="mr-2" id="credit_card" name="payment_method" type="radio"
+                                value="credit_card" />
+                            <span>
+                                Credit Card
+                            </span>
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2" for="cardholder_name">
+                                Cardholder's Name
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="cardholder_name" name="cardholder_name"
+                                placeholder="Cardholder's Name" type="text" />
+                        </div>
+                        <div>
+                            <label class="block mb-2" for="card_number">
+                                Card Number
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="card_number" name="card_number"
+                                placeholder="Card Number" type="text" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2" for="expiry_date">
+                                Expiry Date
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="expiry_date" name="expiry_date"
+                                placeholder="MM / YY" type="text" />
+                        </div>
+                        <div>
+                            <label class="block mb-2" for="cvv">
+                                CVV / CVC *
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="cvv" name="cvv" placeholder="CVV / CVC"
+                                type="text" />
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input class="mr-2" id="paypal" name="payment_method" type="radio" value="paypal" />
+                            <span>
+                                PayPal
+                            </span>
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2" for="paypal_email">
+                                PayPal Email
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="paypal_email" name="paypal_email"
+                                placeholder="PayPal Email" type="email" />
+                        </div>
+                        <div>
+                            <label class="block mb-2" for="paypal_password">
+                                PayPal Password
+                            </label>
+                            <input class="w-full p-2 border rounded-lg" id="paypal_password" name="paypal_password"
+                                placeholder="PayPal Password" type="password" />
+                        </div>
+                    </div>
+                    <div class="text-sm textgr">
+                        * CVV or CVC is the card security code, unique three digits number on the back of your card
+                        separate from its number.
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="step hidden" id="step-4">
+                    <h2 class="text-xl font-bold mb-4">
+                        Payment Details
+                    </h2>
+                    <p class="textgr" id="payment-method-summary">
+                        <!-- Payment method summary will be dynamically populated here -->
+                    </p>
+                </div>
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between mt-8">
+                    <button
+                        class="bg-gray-200 text-red-500 px-6 py-2 rounded-lg hover:bg-black hover:text-white transition"
+                        id="prev-btn" type="button">
+                        Back
+                    </button>
+                    <button
+                        class="bg-red-500 text-white px-6 py-2 rounded-lg ml-auto hover:bg-black hover:text-white transition"
+                        id="next-btn" type="button">
+                        Place Order
+                    </button>
+                    <button
+                        class="bg-green-500 text-white px-6 py-2 rounded-lg ml-auto hover:bg-black hover:text-white transition hidden"
+                        id="place-order-btn" type="button">
+                        Place Order
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- Order Summary (only visible in step 1) -->
+
+    </div>
+</div>
+<div class="w-1/3 hidden lg:block" id="order-summary-container">
+    <div class="order-summary">
+        <h2>
+            Order Summary
+        </h2>
+        <div id="cart-items" class="flex flex-col space-y-4">
+            <!-- Cart items will be dynamically loaded here -->
+        </div>
+
+        <div class="totals">
+            <div>
+                <span>Subtotal</span>
+                <span id="subtotal">PKR 0.00</span>
+            </div>
+            <div>
+                <span>Shipping Fee</span>
+                <span id="shipping_fee">PKR 0.00</span>
+            </div>
+            <div>
+                <span>Tax</span>
+                <span id="tax">PKR 0.00</span>
+            </div>
+            <div>
+                <span>Total Amount</span>
+                <span id="total">PKR 0.00</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function populateAddressFields() {
+        const savedAddressesDropdown = document.getElementById('saved_addresses');
+        const selectedOption = savedAddressesDropdown.options[savedAddressesDropdown.selectedIndex];
+
+        if (selectedOption.value) {
+            // Populate the address fields with selected address data
+            document.getElementById('street').value = selectedOption.getAttribute('data-street');
+            document.getElementById('city').value = selectedOption.getAttribute('data-city');
+            document.getElementById('state').value = selectedOption.getAttribute('data-state');
+            document.getElementById('postal_code').value = selectedOption.getAttribute('data-postal');
+            document.getElementById('country').value = selectedOption.getAttribute('data-country');
+        } else {
+            // Clear the fields if no address is selected
+            document.getElementById('street').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('state').value = '';
+            document.getElementById('postal_code').value = '';
+            document.getElementById('country').value = '';
+        }
+    }
+
+    const steps = document.querySelectorAll('.step');
+    const dots = document.querySelectorAll('.progress-dot');
+    const texts = document.querySelectorAll('.progress-text');
+    const line = document.getElementById('progress-line');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const placeOrderBtn = document.getElementById('place-order-btn'); // Place Order button
+    const orderSummaryContainer = document.getElementById('order-summary-container');
+
+    let currentStep = 0;
+
+    // Update Progress Bar and Step Visibility
+    function updateProgress() {
+        const progressPercentage = (currentStep / (steps.length - 1)) * 100;
+        line.style.width = `${progressPercentage}%`;
+
+        // Show/hide steps
+        steps.forEach((step, index) => {
+            step.classList.toggle('hidden', index !== currentStep);
+        });
+
+        // Update dots and text
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index <= currentStep);
+        });
+
+        texts.forEach((text, index) => {
+            text.classList.toggle('active', index <= currentStep);
+        });
+
+        // Show/Hide Back and Next/Place Order buttons
+        prevBtn.classList.toggle('hidden', currentStep === 0);
+        nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
+        placeOrderBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
+
+        // Show the order summary only on Steps 1 and 2
+        orderSummaryContainer.style.display = (currentStep === 0 || currentStep === 1) ? 'block' : 'none';
+    }
+
+
+
+    // Previous Button Logic
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateProgress();
+        }
+    });
+
+    // Place Order Button Logic
+    placeOrderBtn.addEventListener('click', () => {
+        // Collect form data
+        const formData = new FormData();
+        // Collect data from static fields
+        formData.append('firstname', document.querySelector('#user_firstname').textContent.trim());
+        formData.append('lastname', document.querySelector('#user_lastname').textContent.trim());
+        formData.append('phone_number', document.getElementById('phoneNumber').value.trim());
+        formData.append('street', document.getElementById('street').value);
+        formData.append('city', document.getElementById('city').value);
+        formData.append('state', document.getElementById('state').value);
+        formData.append('postal_code', document.getElementById('postal_code').value);
+        formData.append('country', document.getElementById('country').value);
+
+        // Add billing address
+        formData.append('billing_street', document.getElementById('billing_street').value);
+        formData.append('billing_city', document.getElementById('billing_city').value);
+        formData.append('billing_state', document.getElementById('billing_state').value);
+        formData.append('billing_postal_code', document.getElementById('billing_postal_code').value);
+        formData.append('billing_country', document.getElementById('billing_country').value);
+
+        // Add payment method
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        formData.append('payment_method', paymentMethod);
+
+        // Send data to backend
+        fetch('/place_order', {
+            method: 'POST',
+            body: formData,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // Redirect to order success page
+                    window.location.href = `/order_success?order_id=${data.order_id}`;
+                } else {
+                    alert(`Failed to place order: ${data.error}`);
+                }
+            })
+            .catch((error) => console.error('Error placing order:', error));
+    });
+
+    // Copy Billing Address if "Same as Shipping" is Checked
+    function copyAddress() {
+        const sameAddressCheckbox = document.getElementById('same_as_shipping');
+        if (sameAddressCheckbox.checked) {
+            document.getElementById('billing_street').value = document.getElementById('street').value;
+            document.getElementById('billing_city').value = document.getElementById('city').value;
+            document.getElementById('billing_state').value = document.getElementById('state').value;
+            document.getElementById('billing_postal_code').value = document.getElementById('postal_code').value;
+            document.getElementById('billing_country').value = document.getElementById('country').value;
+        } else {
+            document.getElementById('billing_street').value = '';
+            document.getElementById('billing_city').value = '';
+            document.getElementById('billing_state').value = '';
+            document.getElementById('billing_postal_code').value = '';
+            document.getElementById('billing_country').value = '';
+        }
+    }
+
+    // Load Order Summary on Page Load
+    function loadOrderSummary() {
+        fetch('/get_order_summary')
+            .then(response => response.json())
+            .then(data => {
+                const cartItemsContainer = document.getElementById('cart-items');
+                cartItemsContainer.innerHTML = ''; // Clear existing content
+
+                // Populate cart items dynamically
+                data.items.forEach(item => {
+                    const itemHTML = `
+                    <div class="flex mb-4">
+                        <img src="${item.image_url}" alt="${item.name}" class="w-20 h-20 object-cover rounded">
+                        <div class="ml-4">
+                            <h3 class="text-lg font-bold">${item.name}</h3>
+                            <p class="text-gray-700">Quantity: ${item.quantity}</p>
+                            <p class="text-gray-700">Price: PKR ${item.price}</p>
+                            <p class="text-gray-700">Total: PKR ${item.item_total}</p>
+                        </div>
+                    </div>`;
+                    cartItemsContainer.insertAdjacentHTML('beforeend', itemHTML);
+                });
+
+                // Update totals
+                document.getElementById('subtotal').textContent = `PKR ${data.subtotal}`;
+                document.getElementById('shipping_fee').textContent = `PKR ${data.shipping_fee}`;
+                document.getElementById('tax').textContent = `PKR ${data.tax}`;
+                document.getElementById('total').textContent = `PKR ${data.total}`;
+            })
+            .catch(error => console.error('Error loading order summary:', error));
+    }
+
+    // Initialize Progress and Load Order Summary
+    document.addEventListener('DOMContentLoaded', () => {
+        updateProgress();
+        loadOrderSummary();
+    });
+
+    function captureFormData() {
+        const personalInfo = {
+            firstname: document.querySelector('[id="user_firstname"]').textContent.trim(),
+            lastname: document.querySelector('[id="user_lastname"]').textContent.trim(),
+            phoneNumber: document.getElementById('phoneNumber').value.trim(),
+        };
+
+        const shippingAddress = {
+            street: document.getElementById('street').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            state: document.getElementById('state').value.trim(),
+            postal_code: document.getElementById('postal_code').value.trim(),
+            country: document.getElementById('country').value.trim(),
+        };
+
+        const billingAddress = {
+            street: document.getElementById('billing_street').value.trim(),
+            city: document.getElementById('billing_city').value.trim(),
+            state: document.getElementById('billing_state').value.trim(),
+            postal_code: document.getElementById('billing_postal_code').value.trim(),
+            country: document.getElementById('billing_country').value.trim(),
+        };
+
+        return { personalInfo, shippingAddress, billingAddress };
+    }
+    function populateConfirmation(data) {
+        const { personalInfo, shippingAddress, billingAddress } = data;
+
+        document.getElementById('confirm-personal-info').innerHTML = `
+        <p><strong>Name:</strong> ${personalInfo.firstname || 'N/A'} ${personalInfo.lastname || 'N/A'}</p>
+        <p><strong>Phone Number:</strong> ${personalInfo.phoneNumber || 'N/A'}</p>
+    `;
+
+        document.getElementById('confirm-shipping-address').innerHTML = `
+        <p><strong>Street:</strong> ${shippingAddress.street || 'N/A'}</p>
+        <p><strong>City:</strong> ${shippingAddress.city || 'N/A'}</p>
+        <p><strong>State:</strong> ${shippingAddress.state || 'N/A'}</p>
+        <p><strong>Postal Code:</strong> ${shippingAddress.postal_code || 'N/A'}</p>
+        <p><strong>Country:</strong> ${shippingAddress.country || 'N/A'}</p>
+    `;
+
+        document.getElementById('confirm-billing-address').innerHTML = `
+        <p><strong>Street:</strong> ${billingAddress.street || 'N/A'}</p>
+        <p><strong>City:</strong> ${billingAddress.city || 'N/A'}</p>
+        <p><strong>State:</strong> ${billingAddress.state || 'N/A'}</p>
+        <p><strong>Postal Code:</strong> ${billingAddress.postal_code || 'N/A'}</p>
+        <p><strong>Country:</strong> ${billingAddress.country || 'N/A'}</p>
+    `;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+
+            if (currentStep === 1) { // Step 2: OrderDetails
+                const formData = captureFormData();
+                populateConfirmation(formData);
+            }
+
+            updateProgress();
+        }
+    });
+
+
+
+
+</script>
+{% endblock %}

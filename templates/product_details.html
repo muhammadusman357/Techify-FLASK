@@ -1,0 +1,660 @@
+{% extends 'home-base.html' %}
+
+{% block head%}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+
+{% endblock %}
+
+
+
+{% block content %}
+<div class="sub-nav1">
+    <a href="{{ url_for('show_category_products', category_name='Headsets') }}">HEADSETS</a>
+    <a href="{{ url_for('show_category_products', category_name='keyboards') }}">KEYBOARDS</a>
+    <a href="{{ url_for('show_category_products', category_name='mouse') }}">MOUSE</a>
+    <a href="{{ url_for('show_category_products', category_name='cpus') }}">CPUS</a>
+    <a href="{{ url_for('show_category_products', category_name='monitors') }}">MONITORS</a>
+    <a href="{{ url_for('show_category_products', category_name='gpus') }}">GPUS</a>
+    <a href="{{ url_for('show_category_products', category_name='memory') }}">MEMORY</a>
+    <a href="{{ url_for('show_category_products', category_name='sale') }}">SALE</a>
+</div>
+
+<div class="breadcrumb-top">
+    <div class="breadcrumb">
+        <a class="breadcrumb__link" href="/">
+            <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="home" role="img"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="icon icon-home">
+                <path fill="currentColor"
+                    d="M541 229.16l-61-49.83v-77.4a6 6 0 0 0-6-6h-20a6 6 0 0 0-6 6v51.33L308.19 39.14a32.16 32.16 0 0 0-40.38 0L35 229.16a8 8 0 0 0-1.16 11.24l10.1 12.41a8 8 0 0 0 11.2 1.19L96 220.62v243a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-128l64 .3V464a16 16 0 0 0 16 16l128-.33a16 16 0 0 0 16-16V220.62L520.86 254a8 8 0 0 0 11.25-1.16l10.1-12.41a8 8 0 0 0-1.21-11.27zm-93.11 218.59h.1l-96 .3V319.88a16.05 16.05 0 0 0-15.95-16l-96-.27a16 16 0 0 0-16.05 16v128.14H128V194.51L288 63.94l160 130.57z"
+                    class=""></path>
+            </svg>
+            Home
+        </a>
+        <span>/</span>
+        <a class="breadcrumb__link" href="javascript:void(0);">
+            {{ product.name }}
+        </a>
+    </div>
+</div>
+<div class="container02">
+    <div class="left-column">
+        <i class="fas fa-chevron-left arrow arrow-left"></i>
+        <img id="main-image" alt="{{ product.name }}" height="300" src="{{ image_urls[0] }}" width="300" />
+
+        <i class="fas fa-chevron-right arrow arrow-right"></i>
+
+        <div class="thumbnail-images">
+            {% for image in image_urls %}
+            <img class="thumbnail" alt="Thumbnail" height="50" src="{{ image }}" width="50" />
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="right-column">
+
+        <h1 class="product-title">{{ product.name }}</h1>
+
+        <div class="product-rating">
+            {% if product.avg_rating %}
+            {% set full_stars = product.avg_rating|int %} <!-- Extract full stars -->
+            {% set half_star = 1 if product.avg_rating - full_stars >= 0.5 else 0 %}
+            <!-- Check if there's a half star -->
+            {% set empty_stars = 5 - full_stars - half_star %} <!-- Remaining stars are empty -->
+
+            <!-- Full stars -->
+            {% for _ in range(full_stars) %}
+            <span class="star"><i class="fas fa-star"></i></span> <!-- Filled star -->
+            {% endfor %}
+
+            <!-- Half star -->
+            {% if half_star %}
+            <i class="fas fa-star-half-alt"></i> <!-- Half-filled star -->
+            {% endif %}
+
+            <!-- Empty stars -->
+            {% for _ in range(empty_stars) %}
+            <span class="star-off"><i class="far fa-star"></i></span> <!-- Empty star -->
+            {% endfor %}
+
+            <span>({{ product.avg_rating }} / 5)</span>
+            {% else %}
+            {% set empty_stars = 5 %} <!-- Remaining stars are empty -->
+            <!-- Empty stars -->
+            {% for _ in range(empty_stars) %}
+            <span class="star-off"><i class="far fa-star"></i></span> <!-- Empty star -->
+            {% endfor %}
+            <span>No Reviews</span>
+            {% endif %}
+        </div>
+        <div class="stock-h">
+            <span class="productinfo_title">SKU:</span>
+            {% if product.stock > 0 %}
+            <span class="inventory">✔ In Stock</span>
+            {% else %}
+            <span class="danger">✖ Out of Stock</span>
+            {% endif %}
+        </div>
+        <div class="separator"></div>
+        <div class="product-price">
+            PKR {{ product.price }}
+
+        </div>
+
+        <div class="product-description">
+            <p>{{ description_lines[0] }}</p>
+            {% for line in description_lines[1:] %}
+            <ul>
+                <li>{{ line }}</li>
+
+            </ul>
+            {% endfor %}
+
+        </div>
+        <div class="separator"></div>
+        <div class="quantity-section">
+            <div class="quantity-control">
+                <button id="decrease-quantity">-</button>
+                <input type="text" id="quantity" value="1" />
+                <button id="increase-quantity">+</button>
+            </div>
+            <button class="add-to-cart" data-id="{{ product.id }}">
+                Add To Cart
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+
+        </div>
+        <div class="additional-options">
+            <a href="javascript:void(0);" class="wishlist-btn" data-product-id="{{ product['id'] }}">
+                 <span class="material-symbols-outlined">favorite</span> Add to Wishlist
+            </a>
+        </div>
+        <div class="separator"></div>
+        <div class="product-info">
+            <div class="feature-service">
+                <i><img src="{{url_for('static', filename = 'images/customer/warranty.svg')}}" alt=""></i>
+                2 years warranty
+            </div>
+            <div class="feature-service">
+                <i><img src="{{url_for('static', filename = 'images/customer/transport2.svg')}}" alt=""></i>
+                Delivery time: 1-2 business days
+            </div>
+            <div class="feature-service">
+                <i><img src="{{url_for('static', filename = 'images/customer/return.svg')}}" alt=""></i>
+                Free 90 days return
+            </div>
+        </div>
+        <div class="payment-options">
+            <div class="product-payment-title">Payment Options</div>
+            <img src="{{url_for('static', filename = 'images/customer/mc.avif')}}" alt="">
+        </div>
+        <div class="categories">
+            Categories:&nbsp;<span>Accessories,</span><a
+                href="{{ url_for('show_category_products', category_name=product.category) }}">{{product.category |
+                upper }}</a>
+        </div>
+        <div class="tags">
+            Tags: {{product.vendor}}, <a
+                href="{{ url_for('show_category_products', category_name=product.category) }}">{{product.category |
+                upper }}</a>
+        </div>
+        <div class="social-icons">
+            <a href="#" class="facebook" title="facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="twitter" title="twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="pinterest" title="pinterest"><i class="fab fa-pinterest-p"></i></a>
+            <a href="#" class="linkedin" title="linkedin"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="container-03">
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab(event, 'description')">Description</div>
+        <div class="tab" onclick="switchTab(event, 'additional-info')">Additional Information</div>
+        <div class="tab" onclick="switchTab(event, 'reviews')">Reviews</div>
+    </div>
+    <div class="separator"></div>
+    <div id="description" class="content active">
+        {{ product.description }}
+        <div class="icons">
+            <div class="icon">
+                <i><img src="{{url_for('static', filename = 'images/customer/transport2.svg')}}" alt=""></i>
+                <a href="#">Shipping & Returns</a>
+            </div>
+            <div class="icon">
+                <i><img src="{{url_for('static', filename = 'images/customer/warranty.svg')}}" alt=""></i>
+                <a href="#">Warranty</a>
+            </div>
+            <div class="icon">
+                <i><img src="{{url_for('static', filename = 'images/customer/secure-pay.svg')}}" alt=""></i>
+                <a href="#">Secure Payment</a>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="additional-info" class="content">
+        Additional Information content goes here.
+    </div>
+    <div id="reviews" class="content">
+        <div class="review-container">
+            <div class="rating-overview">
+                <div class="average-rating">
+                    {% if product.avg_rating %}
+                    {% set full_stars = product.avg_rating|int %} <!-- Extract full stars -->
+
+                    <!-- Check if there's a half star -->
+                    {% set empty_stars = 5 - full_stars%} <!-- Remaining stars are empty -->
+
+                    <!-- Full stars -->
+                    {% for _ in range(full_stars) %}
+                    <span class="star"><i class="fas fa-star"></i></span> <!-- Filled star -->
+                    {% endfor %}
+
+                    <!-- Empty stars -->
+                    {% for _ in range(empty_stars) %}
+                    <span class="star-off"><i class="far fa-star"></i></span> <!-- Empty star -->
+                    {% endfor %}
+
+                    <span>({{ product.avg_rating }} / 5)</span>
+                    {% else %}
+                    {% set empty_stars = 5 %} <!-- Remaining stars are empty -->
+                    <!-- Empty stars -->
+                    {% for _ in range(empty_stars) %}
+                    <span class="star-off"><i class="far fa-star"></i></span> <!-- Empty star -->
+                    {% endfor %}
+
+                    {% endif %}
+                    <div class="rating-text">
+                        {{product.avg_rating}} out of 5
+                    </div>
+                    <div class="rating-text">
+                        Based on {{product.review_count_all}} review(s)
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="rating-distribution">
+                    <h2>Customer Reviews</h2>
+                    {% for rating in range(5, 0, -1) %}
+                    <div class="distribution-item">
+                        <div class="stars">
+                            {% for star in range(1, 6) %}
+                            {% if star <= rating %} <span class="star"><i class="fas fa-star"></i></span>
+                                <!-- Filled star -->
+                                {% else %}
+                                <span class="star-off"><i class="far fa-star"></i></span> <!-- Empty star -->
+                                {% endif %}
+                                {% endfor %}
+                        </div>
+                        <div class="bar">
+                            <div class="filled" id="filled-{{ rating }}" style="width: 0%"></div>
+                            <!-- Initial width set to 0 -->
+                        </div>
+                        <div class="count" id="count-{{ rating }}">
+                            {% if product.review_counts[rating] %}
+                            {{ product.review_counts[rating] }}
+                            {% else %}
+                            0
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="divider"></div>
+
+            </div>
+            <!-- end of bar rating-->
+            <div class="separator"></div>
+            <!-- Start of reviews -->
+            <div class="customer-reviews-slider">
+                <!-- Container where reviews will dynamically load -->
+                <div id="reviews-container" class="reviews-list">
+                    <!-- Reviews will be injected here by JavaScript -->
+                </div>
+            
+                <!-- Navigation arrows for pagination -->
+                <div class="navigation-arrows">
+                    <button class="arrow1 left-arrow" id="prev-page" disabled>‹</button>
+                    <button class="arrow2 right-arrow" id="next-page" disabled>›</button>
+                </div>
+            
+                <!-- Pagination dots for navigation -->
+                <div class="pagination-dots" id="pagination-dots"></div>
+            </div>
+            <!-- End of reviews -->
+
+
+
+
+
+        </div>
+        <!-- end of Review container-->
+    </div>
+
+
+</div>
+
+
+
+
+
+
+<div id="image-overlay" class="image-overlay hidden">
+    <button class="close-overlay">&times;</button>
+    <img id="enlarged-image" src="" alt="Enlarged View" />
+    <button class="overlay-arrow overlay-arrow-left"><span
+            class="material-symbols-outlined">arrow_back_ios</span></button>
+    <button class="overlay-arrow overlay-arrow-right"><span
+            class="material-symbols-outlined">arrow_forward_ios</span></button>
+</div>
+
+<script>
+    document.addEventListener('click', function (event) {
+        const quantityInput = document.getElementById('quantity');
+    
+        if (event.target.id === 'increase-quantity') {
+            let quantity = parseInt(quantityInput.value) || 1;
+            quantityInput.value = quantity + 1;
+        }
+    
+        if (event.target.id === 'decrease-quantity') {
+            let quantity = parseInt(quantityInput.value) || 1;
+            if (quantity > 1) {
+                quantityInput.value = quantity - 1;
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const reviewsContainer = document.getElementById('reviews-container');
+        const paginationDots = document.getElementById('pagination-dots');
+        const prevPageButton = document.getElementById('prev-page');
+        const nextPageButton = document.getElementById('next-page');
+    
+        // Extract product ID from the URL
+        const urlParts = window.location.pathname.split("/");
+        const productId = urlParts[urlParts.length - 1]; // Extract the product_id
+        let currentPage = 1; // Start with page 1
+    
+        // Function to load reviews dynamically
+        async function loadReviews(page) {
+            try {
+                const response = await fetch(`/get-reviews/${productId}?page=${page}`);
+                const data = await response.json();
+    
+                if (response.ok) {
+                    // Clear existing reviews and pagination dots
+                    reviewsContainer.innerHTML = '';
+                    paginationDots.innerHTML = '';
+    
+                    // Populate reviews
+                    data.reviews.forEach(review => {
+                        const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+                        const reviewHtml = `
+                            <div class="review-row">
+                                <div class="review-avatar">
+                                    <div class="prof-pic">
+                                        <span class="material-symbols-outlined">person</span>
+                                    </div>
+                                </div>
+                                <div class="review-content">
+                                    <div class="review-header">
+                                        <div class="review-stars">${stars}</div>
+                                        <div class="review-date">${review.created_at}</div>
+                                    </div>
+                                    <div class="review-body">
+                                        <div class="review-author">${review.username}</div>
+                                        <div class="review-text">${review.review_text}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        reviewsContainer.innerHTML += reviewHtml;
+                    });
+    
+                    // Update pagination dots
+                    for (let i = 1; i <= data.total_pages; i++) {
+                        const activeClass = i === page ? 'active-dot' : '';
+                        paginationDots.innerHTML += `<span class="dot ${activeClass}" data-page="${i}"></span>`;
+                    }
+    
+                    // Enable/disable navigation buttons
+                    prevPageButton.disabled = page === 1;
+                    nextPageButton.disabled = page === data.total_pages;
+    
+                    currentPage = page; // Update current page
+                } else {
+                    console.error(data.message || 'Failed to load reviews.');
+                }
+            } catch (error) {
+                console.error('Error fetching reviews:', error);
+            }
+        }
+    
+        // Event listeners for navigation
+        prevPageButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                loadReviews(currentPage - 1);
+            }
+        });
+    
+        nextPageButton.addEventListener('click', () => {
+            loadReviews(currentPage + 1);
+        });
+    
+        // Event delegation for pagination dots
+        paginationDots.addEventListener('click', function (event) {
+            if (event.target.classList.contains('dot')) {
+                const page = parseInt(event.target.getAttribute('data-page'));
+                loadReviews(page);
+            }
+        });
+    
+        // Initial load
+        loadReviews(currentPage);
+    });
+    
+    
+
+    
+
+    // Ensure image_urls is an array, and log it for debugging
+    const image_urls = JSON.parse('{{ image_urls | tojson | safe }}');
+    console.log("Image URLs:", image_urls);
+
+    let currentImageIndex = 0;
+
+    document.querySelectorAll('.thumbnail-images img').forEach((thumbnail, index) => {
+        thumbnail.addEventListener('click', () => {
+            currentImageIndex = index;
+            updateMainImage(index);
+        });
+    });
+
+    function updateMainImage(index, direction = 'left') {
+        const mainImage = document.getElementById('main-image');
+
+        // Add a transition class to the main image
+        mainImage.classList.add('slide-out-' + direction);
+
+        // Wait for the slide-out animation to complete
+        setTimeout(() => {
+            mainImage.src = image_urls[index]; // Change the image source
+            mainImage.classList.remove('slide-out-' + direction);
+            mainImage.classList.add('slide-in-' + direction);
+
+            // Remove the slide-in animation after it's done
+            setTimeout(() => {
+                mainImage.classList.remove('slide-in-' + direction);
+            }, 500); // Match the animation duration in CSS
+        }, 500); // Match the animation duration in CSS
+    }
+
+    document.querySelector('.arrow-left').addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + image_urls.length) % image_urls.length;
+        updateMainImage(currentImageIndex, 'right'); // Slide from right
+    });
+
+    document.querySelector('.arrow-right').addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % image_urls.length;
+        updateMainImage(currentImageIndex, 'left'); // Slide from left
+    });
+
+
+    document.querySelectorAll('.product-rating i').forEach(star => {
+        star.addEventListener('mouseover', function () {
+            const rating = this.getAttribute('data-rating');
+            document.querySelectorAll('.product-rating i').forEach(s => {
+                if (s.getAttribute('data-rating') <= rating) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        });
+
+        star.addEventListener('click', function () {
+            const rating = this.getAttribute('data-rating');
+            document.querySelectorAll('.product-rating i').forEach(s => {
+                if (s.getAttribute('data-rating') <= rating) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        });
+    });
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', async function () {
+            const productId = this.getAttribute('data-id');
+            const quantity = document.getElementById('quantity').value || 1; // Default to 1
+
+            const response = await fetch('/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ product_id: productId, quantity: quantity })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                //alert(result.message || 'Added to cart successfully!');
+                // Update the cart UI dynamically
+                updateCartUI(result.items, result.subtotal);
+                fetchCartData();
+                toggleCart();
+            } else {
+                alert(result.message || 'Failed to add to cart.');
+            }
+        });
+    });
+
+
+
+
+    document.querySelector('.product-rating').addEventListener('mouseleave', function () {
+        document.querySelectorAll('.product-rating i').forEach(s => {
+            s.classList.remove('active');
+        });
+    });
+
+    document.getElementById('wishlist').addEventListener('click', function (e) {
+        e.preventDefault();
+        this.classList.toggle('active');
+        if (this.classList.contains('active')) {
+            this.innerHTML = '<i class="fas fa-heart"></i> Added to Wishlist';
+        } else {
+            this.innerHTML = '<i class="far fa-heart"></i> Add to Wishlist';
+        }
+    });
+
+    
+    
+
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const mainImage = document.getElementById('main-image'); // Select the main image
+    const overlay = document.getElementById('image-overlay');
+    const enlargedImage = document.getElementById('enlarged-image');
+    const closeOverlay = document.querySelector('.close-overlay');
+    const leftArrow = document.querySelector('.overlay-arrow-left');
+    const rightArrow = document.querySelector('.overlay-arrow-right');
+
+    let currentIndex = 0; // Keeps track of the current main image's index
+
+    function updateOverlayImage(index) {
+        console.log("Updating overlay image to index:", index);
+        enlargedImage.src = image_urls[index];
+    }
+
+
+    // Add click event for main image
+    mainImage.addEventListener('click', (event) => {
+        console.log("Main image clicked");
+        overlay.classList.remove('hidden');
+        updateOverlayImage(currentIndex);
+        event.stopPropagation(); // Prevent overlay click event
+    });
+
+
+
+    // Add click events for thumbnails
+    thumbnails.forEach((thumbnail, index) => {
+        thumbnail.addEventListener('click', () => {
+            console.log("Thumbnail clicked, index:", index);
+            mainImage.src = thumbnail.src;
+            currentIndex = index;
+        });
+    });
+
+
+    closeOverlay.addEventListener('click', () => {
+        console.log("Overlay close button clicked");
+        overlay.classList.add('hidden');
+    });
+
+    overlay.addEventListener('click', (event) => {
+        if (
+            event.target === overlay ||
+            event.target === leftArrow ||
+            event.target === rightArrow
+        ) {
+            overlay.classList.add('hidden');
+        }
+    });
+
+    leftArrow.addEventListener('click', (event) => {
+        // Navigate to the previous image in thumbnails
+        currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length;
+        updateOverlayImage(currentIndex);
+        event.stopPropagation(); // Prevent overlay click event
+    });
+
+    rightArrow.addEventListener('click', (event) => {
+        // Navigate to the next image in thumbnails
+        currentIndex = (currentIndex + 1) % thumbnails.length;
+        updateOverlayImage(currentIndex);
+        event.stopPropagation(); // Prevent overlay click event
+    });
+
+
+
+
+    function switchTab(event, tabId) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("tab");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+        document.getElementById(tabId).style.display = "block";
+        document.getElementById(tabId).classList.add("active");
+        event.currentTarget.classList.add("active");
+    }
+
+
+    window.onload = function () {
+        var totalReviews = {{ product.review_count_all }}// Total reviews for all ratings
+
+    // Loop through each rating (5 to 1)
+    {% for rating in range(5, 0, -1) %}
+    var reviewCount = {{ product.review_counts[rating] }}; // Reviews for current rating
+
+    // Calculate the percentage using the JavaScript function
+    var percentage = calculatePercentage(reviewCount, totalReviews);
+
+    // Ensure the width doesn't exceed 100%
+    percentage = Math.min(percentage, 100);
+
+    // Get the bar element by id and update its width
+    var bar = document.getElementById('filled-{{ rating }}');
+    if (bar) {
+        bar.style.width = percentage + '%'; // Set the width dynamically
+    }
+
+    // Get the count element by id and update its innerHTML
+    var countElement = document.getElementById('count-{{ rating }}');
+    if (countElement) {
+        countElement.innerHTML = reviewCount;
+    }
+    {% endfor %}
+    };
+
+    // Function to calculate percentage
+    function calculatePercentage(reviewCount, totalReviewCount) {
+        if (totalReviewCount === 0) {
+            return 0; // Avoid division by zero
+        }
+        return (reviewCount / totalReviewCount) * 100;
+    }
+
+
+</script>
+
+
+
+{% endblock %}

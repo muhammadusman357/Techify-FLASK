@@ -1,0 +1,217 @@
+{% extends '/customer/c-dashboard/user-dashboard-base.html' %}
+{% block head %}
+{% endblock %}
+
+{% block title %}
+{{selected.capitalize()}}
+{% endblock %}
+
+{% block content %}
+<div class="products">
+    <div class="table-header">
+        <span>
+            <h3 class="rec">My Wishlist</h3>
+        </span>
+
+        <div class="tablecontainer">
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for wishlist_item, product, product_image in wishlist_items %}
+            <tr class="wishlist-item" data-product-id="{{ product.product_id }}">
+                <td>
+                    {% if product.images %}
+                    <div class="product-pic" onclick="showPopup1('{{ product_image.image_url }}', ' ', 'product')">
+                        <img src="{{ product_image.image_url }}" alt="{{ product.name }}" class="product-photo">
+                    </div>
+                    {% else %}
+                    <div class="product-pic" onclick="showPopup1(' ', ' ', 'product')">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                    </div>
+                    {% endif %}
+                </td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>
+                    {% if product.stock > 0 %}
+                        <div class="success"> In Stock</div>
+                    {% else %}
+                        <div class="warning"> Out Of Stock</div>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="butter">
+                        <button class="delete-btn" onclick="deleteProduct('{{ product.product_id }}')">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                        <div>
+                            
+                            <button class="add-to-cart" onclick="openProductPopup('{{ product.product_id }}')">
+                                <span class="material-symbols-outlined">add_shopping_cart</span> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Product Popup with Quantity Counter -->
+    <div class="overlay" id="popupOverlay" onclick="closeProductPopup()"></div>
+    <div class="product-popup" id="productPopup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeProductPopup()">&times;</span>
+            <h3 id="popupProductName"></h3>
+            <img id="popupProductImage" src="" alt="" class="product-photo">
+            <p id="popupProductPrice"></p>
+            <p>Stock: <span id="popupProductStock"></span></p>
+
+            <div>
+                <label for="popupQuantity">Quantity:</label>
+                <input type="number" id="popupQuantity" min="1" value="1" max="10">
+            </div>
+
+            <button class="add-to-cart-btn" onclick="addToCartFromPopup()">Add to Cart</button>
+            <div id="addToCartMsg" class="add-to-cart-msg"></div>
+        </div>
+    </div>
+
+    <div class="delete-popup" id="deletePopup">
+        <div class="popup-content">
+            <p>Are you sure you want to delete this product from your wishlist?</p>
+            <button id="confirmDelete">Yes</button>
+            <button id="cancelDelete">No</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let deleteProductId = null;
+
+    // Function to show the delete confirmation popup
+    function deleteProduct(productId) {
+        deleteProductId = productId;
+        document.getElementById('deletePopup').style.display = 'block';
+        document.getElementById('popupOverlay').style.display = 'block';
+    }
+
+    // Close the delete popup without action
+    function closeDeletePopup() {
+        document.getElementById('deletePopup').style.display = 'none';
+        document.getElementById('popupOverlay').style.display = 'none';
+    }
+
+    // Confirm delete action
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        fetch(`/delete_wishlist_item/${deleteProductId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                const row = document.querySelector(`.wishlist-item[data-product-id="${deleteProductId}"]`);
+                row.classList.add('delete-animation');
+                setTimeout(() => {
+                    row.remove();
+                    closeDeletePopup();
+                }, 500);
+            } else {
+                alert('Failed to delete the product.');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred.');
+        });
+    });
+
+    // Close popup on cancel button
+    document.getElementById('cancelDelete').addEventListener('click', closeDeletePopup);
+
+    let selectedProductId = null;
+    let selectedProduct = null;
+    
+    // Open product popup with details
+    // Open product popup with details
+function openProductPopup(productId) {
+    selectedProductId = productId;
+
+    // Fetch product details from backend
+    fetch(`/get_product_details/${productId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.product) {
+                selectedProduct = data.product;
+                document.getElementById('popupProductName').innerText = data.product.name;
+                document.getElementById('popupProductImage').src = data.product.image_url;
+                document.getElementById('popupProductPrice').innerText = `$${data.product.price}`;
+                document.getElementById('popupProductStock').innerText = data.product.stock;
+                document.getElementById('popupQuantity').max = data.product.stock;
+                document.getElementById('popupQuantity').value = 1; // Default quantity
+                document.getElementById('productPopup').style.display = 'block';
+                document.getElementById('popupOverlay').style.display = 'block';
+            }
+        })
+        .catch(error => console.error('Error fetching product details:', error));
+}
+
+// Close product popup
+function closeProductPopup() {
+    document.getElementById('productPopup').style.display = 'none';
+    document.getElementById('popupOverlay').style.display = 'none';
+    document.getElementById('addToCartMsg').innerHTML = '';
+}
+
+// Add to cart from popup
+function addToCartFromPopup() {
+    const quantity = document.getElementById('popupQuantity').value;
+
+    if (quantity <= 0 || quantity > selectedProduct.stock) {
+        alert('Please select a valid quantity.');
+        return;
+    }
+
+    // Send the data to the backend to add to the cart
+    fetch('/add_to_cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            product_id: selectedProductId,
+            quantity: quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const msgElement = document.getElementById('addToCartMsg');
+
+        if (data.message === "Item added to cart successfully!") {
+            msgElement.innerHTML = `<span class="material-symbols-outlined success">check_circle</span> Added to Cart`;
+            setTimeout(() => {
+                closeProductPopup();
+            }, 2000);
+        } else {
+            msgElement.innerHTML = `<span class="material-symbols-outlined error">error</span> ${data.message}`;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred.');
+    });
+}
+
+</script>
+
+{% endblock %}

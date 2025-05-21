@@ -1,0 +1,136 @@
+{% extends 'home-base.html' %}
+
+{% block head%}
+    <style>
+        .butt2{
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: #fff;
+            
+            margin: 0 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 32px;
+            transition: transform 0.3s ease,color 0.3s ease;
+        }
+        .butt2:hover{
+            transform: scale(1.1);
+            background: #000000;
+        }
+
+        .butt3{
+            margin: 0 auto;
+            align-items: center;
+            justify-content: center;
+            bottom: 500px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .progress1-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px auto;
+        max-width: 800px;
+        /* Adjust width for responsiveness */
+        z-index: 100;
+        /* Ensure it's above other elements */
+        position: sticky;
+        /* To make it stay on screen during scrolling */
+        top: 0;
+        /* Stick it at the top */
+        background: #fff;
+        /* Background color to avoid transparency issues */
+        padding: 10px;
+        /* Add padding for spacing */
+        border-radius: 8px;
+        /* Rounded corners for better design */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* Subtle shadow */
+    }
+
+    .progress1-bar {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .progress1-step {
+        text-align: center;
+        flex: 1;
+        padding: 10px 20px;
+        border-radius: 20px;
+        background-color: #e0e0e0;
+        color: #888;
+        font-size: 14px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        position: relative;
+        margin: 0 5px;
+        white-space: nowrap;
+        /* Prevent wrapping */
+    }
+
+    .progress1-step.active {
+        background-color: #e74c3c;
+        color: white;
+    }
+
+    .progress1-step:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        transform: translateY(-50%);
+        height: 4px;
+        width: calc(100% - 10px);
+        background-color: #e0e0e0;
+        z-index: -1;
+    }
+
+    .progress1-step:last-child:before {
+        display: none;
+    }
+
+    .progress1-step.active:before {
+        background-color: #e74c3c;
+    }
+
+        
+    </style>
+
+    {% endblock %}
+{% block content %}
+<div class="progress1-container">
+    <div class="progress1-bar">
+        <div class="progress1-step">Address</div>
+        <div class="progress1-step ">Order Details</div>
+        <div class="progress1-step active">Finish</div>
+    </div>
+</div>
+
+
+
+    <div class="container mx-auto my-5 p-5 bg-white rounded-lg shadow-lg text-center">
+        <h2 class="text-2xl font-bold text-green-600">Your order has been placed successfully!</h2>
+        <p class="text-gray-700 mt-3">Thank you for shopping with us.</p>
+        <div class="fixed bottom-0 left-0 m-5 ">
+            <a href="/" class="butt2 ">Back to Shopping</a>
+        </div>
+        
+    </div>
+    
+
+
+{% endblock %}

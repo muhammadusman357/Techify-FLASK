@@ -1,0 +1,156 @@
+<html>
+
+<head>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .btn-hover:hover {
+            background-color: black;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+        <h1 class="text-2xl font-bold mb-6">
+            Checkout
+        </h1>
+        <div class="flex items-center mb-2">
+            <div class="flex-1">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-red-500 rounded-full">
+                    </div>
+                    <div class="flex-1 h-1 bg-red-500">
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-red-500 rounded-full">
+                    </div>
+                    <div class="flex-1 h-1 bg-red-500">
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-red-500 rounded-full">
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-300">
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-gray-300 rounded-full">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between mb-8">
+            <p class="text-center text-red-500 mt-2 flex-1">
+                Address
+            </p>
+            <p class="text-center text-red-500 mt-2 flex-1">
+                Payment
+            </p>
+            <p class="text-center text-red-500 mt-2 flex-1">
+                Confirmation
+            </p>
+            <p class="text-center text-gray-500 mt-2 flex-1">
+                Finish
+            </p>
+        </div>
+        <div class="flex justify-between mb-8">
+            <div class="w-1/2 p-4 border rounded-lg mr-2">
+                <div class="flex items-center justify-center mb-4">
+                    <img alt="Visa and MasterCard logos" height="40"
+                        src="https://storage.googleapis.com/a1aa/image/rTNfIVif0kpT5kUmQ14lv386MPXPOrT0noCwCXNbgEMeHznnA.jpg"
+                        width="60" />
+                </div>
+                <div class="flex items-center">
+                    <input class="mr-2" name="payment" type="radio" />
+                    <label>
+                        Pay £340.00 with credit card
+                    </label>
+                </div>
+            </div>
+            <div class="w-1/2 p-4 border rounded-lg ml-2">
+                <div class="flex items-center justify-center mb-4">
+                    <img alt="PayPal logo" height="40"
+                        src="https://storage.googleapis.com/a1aa/image/IoeCreZPRwhhKkLCn3R8raYkRFaBxHyFmeJKoqUrCF8fPmPPB.jpg"
+                        width="60" />
+                </div>
+                <div class="flex items-center">
+                    <input class="mr-2" name="payment" type="radio" />
+                    <label>
+                        Pay £340.00 with PayPal
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div>
+                <label class="block mb-2">
+                    Cardholder's Name
+                </label>
+                <div class="relative">
+                    <input class="w-full p-2 border rounded-lg" type="text" />
+                    <i class="fas fa-user absolute right-3 top-3 text-gray-400">
+                    </i>
+                </div>
+            </div>
+            <div>
+                <label class="block mb-2">
+                    Card Number
+                </label>
+                <div class="relative">
+                    <input class="w-full p-2 border rounded-lg" type="text" />
+                    <i class="fas fa-credit-card absolute right-3 top-3 text-gray-400">
+                    </i>
+                </div>
+            </div>
+            <div>
+                <label class="block mb-2">
+                    Valid thru
+                </label>
+                <div class="relative">
+                    <input class="w-full p-2 border rounded-lg" placeholder="MM / YY" type="text" />
+                    <i class="fas fa-calendar-alt absolute right-3 top-3 text-gray-400">
+                    </i>
+                </div>
+            </div>
+            <div>
+                <label class="block mb-2">
+                    CVV / CVC *
+                </label>
+                <div class="relative">
+                    <input class="w-full p-2 border rounded-lg" type="text" />
+                    <i class="fas fa-lock absolute right-3 top-3 text-gray-400">
+                    </i>
+                </div>
+            </div>
+        </div>
+        <p class="text-gray-500 text-sm mb-8">
+            * CVV or CVC is the card security code, unique three digits number on the back of your card separate from
+            its number.
+        </p>
+        <div class="flex justify-between">
+            <button class="bg-gray-200 text-red-500 px-6 py-2 rounded-lg btn-hover">
+                Back
+            </button>
+            <button class="bg-red-500 text-white px-6 py-2 rounded-lg btn-hover">
+                Next Step
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>

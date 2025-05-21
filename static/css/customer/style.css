@@ -1,0 +1,28 @@
+.carousel .list .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures proper spacing between text and images */
+    gap: 20px; /* Adds space between text and image */
+    padding: 20px; /* Optional padding for better aesthetics */
+}
+
+.carousel .list .item .introduce {
+    flex: 1; /* Ensures text section takes up remaining space */
+}
+
+.carousel .list .item img {
+    flex: 0 0 auto; /* Keeps the image size fixed */
+    max-width: 60%; /* Ensures image does not exceed 60% of item width */
+    margin-left: 20px; /* Adds a gap between the image and the text */
+    border-radius: 10px; /* Optional: Adds rounded corners to the image */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow for better visuals */
+}
+
+.carousel .list .item .introduce .des {
+    margin-top: 10px; /* Adds spacing between description and other text elements */
+    color: #5559;
+}
+
+.carousel .list .item .introduce .seeMore {
+    margin-top: 15px; /* Adds spacing below the description */
+}

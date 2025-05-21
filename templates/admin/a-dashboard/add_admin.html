@@ -1,0 +1,230 @@
+{%  extends '/admin/a-dashboard/base_sidebar.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block option1 %}
+{% endblock %}
+
+{% block title %}
+{{selected}}
+{% endblock %}
+
+{% block content %}
+<div class="products">
+    <h1>Add Admin</h1>
+    <div id="error-message" class="error-message"></div>
+    <form id="adminForm" method="POST" action="{{ url_for('add_admin') }}">
+
+        <div class="form-group">
+            <div class="form-group-half">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="input-field" placeholder="Enter Username" value="{{ username }}" required>
+                <span class="username-icon"></span> <!-- Icon placeholder -->
+                <span id="error_message3" class="danger"></span> <!-- Username error message placeholder -->
+                {% if error_message3 %}<span id="error_message3" class="danger">* {{ error_message3 }}</span>{% endif %}
+            </div>
+            
+            <div class="form-group-half">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="input-field" placeholder="Enter Email" value="{{ email }}" required>
+                <span class="email-icon"></span> <!-- Icon placeholder -->
+                <span id="error_message2" class="danger"></span> <!-- Error message placeholder -->
+                {% if error_message2 %}<span id="error_message2" class="danger">* {{ error_message2 }}</span>{% endif %}
+            </div>
+            
+            
+        </div>
+        
+        <div class="form-group">
+            <div class="form-group-half">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" required placeholder="Enter first name">
+            </div>
+            <div class="form-group-half">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" placeholder="Enter last name" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="form-group-half">
+                <label for="password">Password</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Password" required oninput="checkPasswordStrength()">
+                    <span class="password-toggle-icon" onclick="togglePasswordVisibility('password')">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div class="validator">            
+                    <!-- Wrapper for strength bar -->
+                    <div class="strength-wrapper">
+                        <div id="strengthBar" class="strength-bar"></div> <!-- Filled strength bar -->
+                        <div class="empty-bar"></div> <!-- Background empty bar -->
+                    </div>
+                    
+                    <div id="strengthLabel" class="strength-label"></div>
+                    <p id="capital">
+                        <i class="fas fa-times"></i>
+                        <i class="fas fa-check"></i><span>Upper Case</span>
+                    </p>
+                    <p id="special-char">
+                        <i class="fas fa-times"></i>
+                        <i class="fas fa-check"></i><span>Special Character</span>
+                    </p>
+                    <p id="number">
+                        <i class="fas fa-times"></i>
+                        <i class="fas fa-check"></i><span>Number</span>
+                    </p>
+                    <p id="more-than-8">
+                        <i class="fas fa-times"></i>
+                        <i class="fas fa-check"></i><span>More than 8 characters</span>
+                    </p>
+                </div>
+                               
+                <div id="strengthBar" class="strength-bar"></div>
+                <div id="strengthLabel" class="strength-label"></div>
+            </div>
+            <div class="form-group-half">
+                <label for="confpassword">Confirm Password</label>
+                <div class="password-container">
+                    <input type="password" id="confpassword" name="confpassword" placeholder="Confirm password" required oninput="comparePasswords()">
+                    <span class="password-toggle-icon" onclick="togglePasswordVisibility('confpassword')">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div id="confirmMessage" class="danger"></div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="form-group-half">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group-half">
+                <label for="role">Role</label>
+                <select id="role" name="role" required>
+                    <option value="product_manager">Product Manager</option>
+                    <option value="order_support">Order Support</option>
+                    <option value="analyst">Analyst</option>
+                    <option value="superadmin">superadmin</option>
+                    {% if error_message4 %}<h4>* {{ error_message4 }}</h4>{% endif %}
+                </select>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-back" type="button" onclick="history.back()">Back</button>
+        <button class="btn" type="submit">Save Admin</button>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+
+<script>
+    let email2 = "{{ email }}"; // Previous email from backend
+    let username2 = "{{ username }}"; // Previous username from backend
+    
+    let input1 = document.getElementById("email");
+    let input2 = document.getElementById("username");
+    
+    let emailIcon = document.querySelector(".email-icon");
+    let usernameIcon = document.querySelector(".username-icon");
+    
+    let pattern = /^[^]+@[^]+\.[a-z]{2,3}$/;
+    
+    // Email validation
+    input1.addEventListener("input", validateEmail);
+    
+    function validateEmail() {
+        let emailInput = input1.value;
+    
+        // Reset error message
+        document.getElementById("error_message2").textContent = "";
+    
+        if (emailInput.match(pattern) && emailInput !== email2) {
+            checkEmailExists(emailInput);
+        } else if (!emailInput.match(pattern)) {
+            input1.classList.add("invalid");
+            input1.classList.remove("valid");
+            emailIcon.className = "email-icon invalid";
+            document.getElementById("error_message2").textContent = "* Invalid email format.";
+        } else {
+            input1.classList.remove("invalid");
+            emailIcon.className = "email-icon valid";
+        }
+    }
+    
+    // Username validation
+    input2.addEventListener("input", validateUsername);
+    
+    function validateUsername() {
+        let usernameInput = input2.value;
+    
+        // Reset error message
+        document.getElementById("error_message3").textContent = "";
+    
+        if (usernameInput && usernameInput !== username2) {
+            checkUsernameExists(usernameInput);
+        } else if (usernameInput.length === 0) {
+            input2.classList.add("invalid");
+            input2.classList.remove("valid");
+            usernameIcon.className = "username-icon invalid";
+            document.getElementById("error_message3").textContent = "* Username cannot be empty.";
+        } else {
+            input2.classList.remove("invalid");
+            usernameIcon.className = "username-icon valid";
+        }
+    }
+    
+    // Function to check if email exists in the backend
+    function checkEmailExists(emailInput) {
+        fetch(`{{ url_for('check_email_exists') }}?email=${encodeURIComponent(emailInput)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    input1.classList.add("invalid");
+                    input1.classList.remove("valid");
+                    emailIcon.className = "email-icon invalid";
+                    document.getElementById("error_message2").textContent = "* An account with this email address already exists";
+                } else {
+                    input1.classList.add("valid");
+                    input1.classList.remove("invalid");
+                    emailIcon.className = "email-icon valid";
+                    document.getElementById("error_message2").textContent = "";
+                }
+            })
+            .catch(error => console.error("Error checking email:", error));
+    }
+    
+    // Function to check if username exists in the backend
+    function checkUsernameExists(usernameInput) {
+        fetch(`{{ url_for('check_username_exists') }}?username=${encodeURIComponent(usernameInput)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    input2.classList.add("invalid");
+                    input2.classList.remove("valid");
+                    usernameIcon.className = "username-icon invalid";
+                    document.getElementById("error_message3").textContent = "* Username already taken.";
+                } else {
+                    input2.classList.add("valid");
+                    input2.classList.remove("invalid");
+                    usernameIcon.className = "username-icon valid";
+                    document.getElementById("error_message3").textContent = "";
+                }
+            })
+            .catch(error => console.error("Error checking username:", error));
+    }
+    
+</script>
+
+{% endblock %}
+
+{% block content2 %}
+{% endblock %}

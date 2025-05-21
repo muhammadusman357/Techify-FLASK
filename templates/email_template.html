@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Email</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://res.cloudinary.com/ditkr99ht/image/upload/v1731834272/dh6edj63phtkrl2nyxyw.png" alt="Company Logo">
+            
+        </div>
+        <div class="content">
+            <h2>Hello, {{ username }}!</h2>
+            <p>Thank you for signing up. We're excited to have you on board!</p>
+            <p>Feel free to explore our platform and let us know if you need any help.</p>
+            <p>Best regards, <br> The Team</p>
+        </div>
+        <div class="footer">
+            <p>Techify | Karachi | Contact</p>
+        </div>
+    </div>
+</body>
+</html>

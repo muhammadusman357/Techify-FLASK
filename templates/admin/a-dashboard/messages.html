@@ -1,0 +1,253 @@
+{%  extends '/admin/a-dashboard/base_sidebar.html' %}
+
+
+
+
+{% block option1 %}
+
+
+
+{% endblock %}
+    
+{% block title %} 
+    {{selected}}
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename = 'css/adminChatbox.css')}}">
+    <link  rel="stylesheet" href="{{url_for('static', filename = 'css/messages.css')}}">
+{% endblock %}
+
+
+{%  block content %}
+
+<div class="messages">
+    <div class="table-header">
+        <span>
+            <h3 class="rec">Customer Support</h3>
+        </span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Room ID</th>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Reply</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chat_room, username in chat_rooms %}
+            <tr>
+                <td>{{ chat_room.chat_id }}</td>
+                <td>{{ chat_room.user_id }}</td>
+                <td>{{ username }}</td>
+                <td>
+                    <button class="chat-icon" data-room-id="{{ chat_room.chat_id }}">Send Message</button>
+                </td>
+                <td>
+                    {% if chat_room.status %}
+                        {% if chat_room.status == 'seen' %}
+                            <span class="seen-status">Seen</span>
+                        {% elif chat_room.status == 'unseen' %}
+                            <span class="unseen-status">Unseen</span>
+                        {% else %}
+                            <span>.</span>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {% if chat_rooms.has_prev %}
+            <a href="javascript:void(0);" onclick="goToPageMessage('{{ chat_rooms.prev_num }}')"><span class="material-symbols-outlined" >chevron_left</span></a>
+        {% else %}
+            <span class="disabled-next material-symbols-outlined" >chevron_left</span>
+        {% endif %}
+        {% for page_num in chat_rooms.iter_pages() %}
+            {% if page_num == chat_rooms.page %}
+                <span class="current-page">{{ page_num }}</span>
+            {% else %}
+                <a href="javascript:void(0);" onclick="goToPageMessage('{{ page_num }}')">{{ page_num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if chat_rooms.has_next %}
+            <a href="javascript:void(0);" onclick="goToPageMessage('{{ chat_rooms.next_num }}')"><span class="material-symbols-outlined" >chevron_right</span></a>
+        {% else %}
+            <span class="disabled-next material-symbols-outlined" >chevron_right</span>
+        {% endif %}
+    </div>
+
+    <div id="chatbox-container" class="chatbox hidden">
+        <div class="chat-header">
+        <span>Customer Support</span>
+        <i class="material-symbols-outlined close-chat" id="close-chat">close</i>
+        </div>
+        <div class="chat-body" id="chat-body"></div>
+        <div class="chat-footer">
+        <input type="text" id="message-input" placeholder="Type your message..." />
+        <button id="send-button">Send</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    const chatIcons = document.querySelectorAll(".chat-icon");
+    const chatboxContainer = document.getElementById("chatbox-container");
+    const closeChat = document.getElementById("close-chat");
+    const sendButton = document.getElementById("send-button");
+    const messageInput = document.getElementById("message-input");
+    const chatBody = document.getElementById("chat-body");
+   
+    let currentRoomId = null;
+    let lastMessageTime = null; // Track the last fetched message timestamp
+    let pollingInterval = null;
+
+    // Toggle the arrow icon and dropdown menu
+    
+
+    function openChatbox(roomId) {
+        currentRoomId = roomId;
+    
+        chatboxContainer.classList.remove("hidden");
+        loadNewMessages(roomId); // Load messages for the selected room // Load messages for the selected room
+    }
+    // Join a chat room
+    chatIcons.forEach((chatIcon) => {
+        chatIcon.addEventListener("click", () => {
+            const roomId = chatIcon.dataset.roomId;
+            console.log("Chat icon clicked. Room ID:", roomId); // Debugging
+            currentRoomId = roomId;
+            loadChatMessages(roomId);
+            openChatbox(roomId) 
+            startPolling(roomId)
+        });
+    });
+
+    function startPolling(roomId) {
+        if (!roomId) return;
+        if (pollingInterval) stopPolling(); // Ensure no duplicate intervals
+        
+
+        pollingInterval = setInterval(() => {
+            openChatbox(roomId)
+        }, 2000);
+    }
+    
+    // Close the chat box
+    closeChat.addEventListener("click", () => {
+        chatboxContainer.classList.add("hidden");
+        stopPolling(); // Stop polling when leaving the chat
+        currentRoomId = null;
+    });
+
+    // Send a message
+    sendButton.addEventListener("click", () => {
+        const message = messageInput.value.trim();
+        if (!message || !currentRoomId) {
+            alert("Please type a message and select a room.");
+            return;
+        }
+
+        // Send the message via POST request
+        fetch("/send_message", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                room_id: currentRoomId,
+                message_text: message,
+            }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                messageInput.value = ""; // Clear the input field
+                loadChatMessages(currentRoomId); // Refresh messages immediately
+            } else {
+                alert("Failed to send message.");
+            }
+        });
+    });
+
+
+    async function loadNewMessages(chatRoomId) {
+        try {
+            const response = await fetch(`/get_adminmessages?chat_id=${chatRoomId}&since=${lastMessageTime || ''}`);
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach((message) => {
+                        if (!lastMessageTime || new Date(message.timestamp) > new Date(lastMessageTime)) {
+                            appendMessage(
+                                message.message,
+                                message.sender_type === "admin" ? "admin-message" : "user-message"
+                            );
+                            lastMessageTime = message.timestamp; // Update to the latest message timestamp
+                        }
+                    });
+                }
+            } else {
+                console.error("Failed to fetch new messages.");
+            }
+        } catch (error) {
+            console.error("Error while fetching new messages:", error);
+        }
+    }
+    // Load initial chat messages
+    async function loadChatMessages(chatRoomId) {
+        try {
+            const response = await fetch(`/get_adminmessages?chat_id=${chatRoomId}`);
+            if (response.ok) {
+                const data = await response.json();
+                chatBody.innerHTML = ""; // Clear previous messages
+                data.messages.forEach((message) => {
+                    appendMessage(
+                        message.message,
+                        message.sender_type === "admin" ? "admin-message" : "user-message"
+                    );
+                    lastMessageTime = message.timestamp; // Update the last message timestamp
+                });
+            } else {
+                alert("Failed to load messages.");
+            }
+        } catch (error) {
+            console.error("Error loading messages:", error);
+        }
+    }
+
+    // Append a message to the chatbox
+    function appendMessage(message, className) {
+        const chatBox = document.querySelector("#chatbox-messages"); // Replace with your chatbox element's ID
+        const messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        messageElement.className = className;
+        chatBody.appendChild(messageElement);
+        chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom
+    }
+
+    // Stop polling
+    function stopPolling() {
+        if (pollingInterval) {
+            clearInterval(pollingInterval);
+            pollingInterval = null; // Reset the interval variable
+        }
+    }
+
+    function goToPageMessage(page) {
+
+        window.location.href = `/messages?page=${page}`; 
+
+    }
+</script>
+{% endblock %}
+
+{% block content2 %}
+
+{% endblock %}

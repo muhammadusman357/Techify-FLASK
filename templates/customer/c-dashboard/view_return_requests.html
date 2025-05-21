@@ -1,0 +1,115 @@
+{% extends '/customer/c-dashboard/user-dashboard-base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer/dashboard/customerorders.css') }}">
+{% endblock %}  
+
+{% block title %}Return Requests{% endblock %}
+
+{% block content %}
+<div class="products">
+    <div class="table-header">
+        <span>
+            <h3 class="rec">Your Return Requests</h3>
+        </span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Requested At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in return_requests %}
+            <tr class="return-request-item">
+                <td>
+                    {% if request.product_image %}
+                    <div class="product-pic">
+                        <img src="{{ request.product_image }}" onclick="showPopup1('{{ request.product_image }}', ' ', 'product')" alt="{{ request.product_name }}" class="product-photo" >
+                    </div>
+                    {% else %}
+                    <div class="product-pic">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                    </div>
+                    {% endif %}
+                </td>
+                <td>{{ request.product_name }}</td>
+                <td>PKR {{ request.price }}</td>
+                <td>{{ request.reason }}</td>
+                <td>
+                    {% if request.status == 'pending' %}
+                    <span class="status-pending">Pending</span>
+                    {% elif request.status == 'approved' %}
+                    <span class="status-approved">Approved</span>
+                    {% elif request.status == 'rejected' %}
+                    <span class="status-rejected">Rejected</span>
+                    {% endif %}
+                </td>
+                <td>{{ request.requested_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="overlay" onclick="hidePopup()"></div>
+    <div class="popup1" id="popup1">
+        <span class="close-btn2" onclick="hidePopup()">&times;</span>
+        <img id="popupImage" src="" alt="" class="product-photo">
+        <p id="popupUsername" class="popup-username"></p> <!-- This will show either product name or admin username -->
+    </div>
+</div>
+
+<script>
+
+    function showPopup1(imageUrl, name, type) {
+        // Log the imageUrl and name to debug
+        console.log("Image URL passed to showPopup: ", imageUrl);
+        console.log("Name passed to showPopup: ", name);
+        console.log("Type passed to showPopup: ", type);
+    
+        // Set the popup image source
+        document.getElementById('popupImage').src = imageUrl; // Set the correct image source
+        document.getElementById('popupUsername').textContent = name; // Set the name
+    
+        // Optionally change popup title or other content based on type
+        if (type === 'product') {
+            // Do something specific for products if needed
+            console.log("Showing product popup");
+        } else if (type === 'admin') {
+            // Do something specific for admins if needed
+            console.log("Showing admin popup");
+        }
+    
+        document.getElementById('popup1').style.display = 'flex'; // Show the popup
+        document.querySelector('.overlay').style.display = 'block'; // Show the overlay
+    }
+    
+    function hidePopup() {
+        document.getElementById('popup1').style.display = 'none'; // Hide the popup
+        document.querySelector('.overlay').style.display = 'none'; // Hide the overlay
+    }
+
+
+    function showTab(tabId) {
+        // Remove active class from all tabs
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        // Hide all content sections
+        const contents = document.querySelectorAll('.content');
+        contents.forEach(content => content.style.display = 'none');
+
+        // Activate the selected tab and show corresponding content
+        document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        document.getElementById(tabId).style.display = 'block';
+    }
+
+    function goToPageMyOrder(page) {
+        window.location.href = `/my_orders?page=${page}`; 
+    }
+</script>
+{% endblock %}

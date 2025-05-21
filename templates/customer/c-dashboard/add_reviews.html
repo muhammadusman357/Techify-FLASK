@@ -1,0 +1,32 @@
+{% extends '/customer/c-dashboard/user-dashboard-base.html' %}
+{% block title %}{{ selected.capitalize() }}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer/dashboard/customerorders.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="reviews-container">
+    <form id="review-form" class="add-review-container" method="POST" action="/add_reviews/{{ product_id }}">
+        <h1>Add Your Review</h1>
+        <div class="form-group">
+            <label for="review-text">Review Text:</label>
+            <textarea id="review-text" name="review_text" placeholder="Write your detailed review here" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="rating">Rating:</label>
+            <select id="rating" name="rating" required>
+                <option value="">-- Select a Rating --</option>
+                <option value="1">1 - Poor</option>
+                <option value="2">2 - Fair</option>
+                <option value="3">3 - Good</option>
+                <option value="4">4 - Very Good</option>
+                <option value="5">5 - Excellent</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-submit">Submit Review</button>
+        {% if message %}
+            <div id="response-message">{{ message }}</div> <!-- Display server-side messages -->
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,512 @@
+<html>
+
+<head>
+    <title>
+        Product Page
+    </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: #888;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .breadcrumb a {
+            color: #888;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            max-width: 1200px;
+            /* Set a max-width to keep it from stretching too far */
+            margin: 0 auto;
+            /* Center the container horizontally */
+        }
+
+        .left-column {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .left-column img {
+            margin-top: 30px;
+            width: 300px;
+            height: auto;
+            max-width: 500px;
+        }
+
+        .thumbnail-images {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .thumbnail-images img {
+            width: 50px;
+            height: auto;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #888;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .arrow-left {
+            left: 10px;
+        }
+
+        .arrow-right {
+            right: 10px;
+        }
+
+        .arrow:hover {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .right-column {
+            text-align: justify;
+            flex: 1;
+            padding: 10px;
+        }
+
+        .product-title {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 30px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .product-price {
+            font-size: 28px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .product-price del {
+            color: #888;
+            margin-left: 10px;
+        }
+
+        .product-price span {
+            color: #e74c3c;
+            margin-left: 10px;
+        }
+
+        .product-rating {
+            font-size: small;
+            color: #888;
+            margin: 10px 0;
+        }
+
+        .product-rating i {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .product-rating i:hover,
+        .product-rating i.active {
+            color: #FFD700;
+        }
+
+        .sale-end {
+            margin: 10px 0;
+        }
+
+        .sale-end span {
+            display: inline-block;
+            width: 50px;
+            text-align: center;
+            background-color: #f1f1f1;
+            padding: 5px;
+            margin-right: 5px;
+        }
+
+        .product-description {
+            margin: 20px 0;
+            color: #888;
+            font-size: small;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .quantity input {
+            width: 50px;
+            text-align: center;
+            margin: 0 10px;
+            border: none;
+            background-color: #f0f0f0;
+        }
+
+        .additional-options {
+            font-size: small;
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0 40px;
+        }
+
+        .additional-options a {
+            color: #888;
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .additional-options a:hover {
+            color: #e74c3c;
+        }
+
+        .additional-options a.active {
+            color: #e74c3c;
+        }
+
+        .product-info {
+            font-size: small;
+            color: #888;
+            margin: 40px 0 20px 0;
+            /* Add more margin to create a gap */
+        }
+
+        .product-info i {
+            margin-right: 10px;
+        }
+
+        .payment-options img {
+            width: 50px;
+            height: auto;
+            margin: 0 5px;
+        }
+
+        .categories,
+        .tags {
+            font-size: small;
+            margin: 20px 0;
+            color: #888;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: flex-start;
+            margin: 20px 0;
+        }
+
+        .social-icons a {
+            color: #888;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .social-icons a:hover {
+            color: #333;
+        }
+
+        .quantity-section {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            border-radius: 20px;
+        }
+
+        .quantity-section .quantity-control {
+
+            display: flex;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin-right: 20px;
+        }
+
+        .quantity-section .quantity-control button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .quantity-section .quantity-control button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .quantity-section .quantity-control input {
+            width: 50px;
+            text-align: center;
+            border: none;
+            background-color: #f0f0f0;
+        }
+
+        .add-to-cart {
+            padding: 10px 80px;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 3px;
+        }
+
+        .add-to-cart:hover {
+            background-color: #000;
+        }
+
+        .add-to-cart i {
+            margin-left: 10px;
+        }
+
+        .wishlist i.fas.fa-heart {
+            color: #e74c3c;
+        }
+
+        .separator {
+            border-bottom: 1px solid #ccc;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="breadcrumb">
+        <a href="#">
+            Home
+        </a>
+        /
+        <a href="#">
+            Turtle Beach Recon Wired Gaming Controller
+        </a>
+    </div>
+    <div class="container">
+        <div class="left-column">
+            <i class="fas fa-chevron-left arrow arrow-left"></i>
+            <img id="main-image" alt="Turtle Beach Recon Wired Gaming Controller" height="300"
+                src="https://storage.googleapis.com/a1aa/image/n1bUA39ejhV4HaQOu2Ro2vUDDD4zuhR5egzfNQRdK8qpIPjnA.jpg"
+                width="300" />
+            <i class="fas fa-chevron-right arrow arrow-right"></i>
+            <div class="thumbnail-images">
+                <img alt="Thumbnail 1" height="50"
+                    src="https://storage.googleapis.com/a1aa/image/n1bUA39ejhV4HaQOu2Ro2vUDDD4zuhR5egzfNQRdK8qpIPjnA.jpg"
+                    width="50" />
+                <img alt="Thumbnail 2" height="50"
+                    src="https://storage.googleapis.com/a1aa/image/fsWSaO3nepoitEpX2vHdZ0uhdH75oh6pnfUFLex7hD3XReMeE.jpg"
+                    width="50" />
+                <img alt="Thumbnail 3" height="50"
+                    src="https://storage.googleapis.com/a1aa/image/ci6CRfP6y3SMNiizSzqRBLuT3b4ttyF1wt1JfAv4cHlPknxTA.jpg"
+                    width="50" />
+                <img alt="Thumbnail 4" height="50"
+                    src="https://storage.googleapis.com/a1aa/image/jwQZIRG9f014NyT0WKd3n93S2y2eeBanqDmVnjmoVzVwIPjnA.jpg"
+                    width="50" />
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="product-title">
+                TURTLE BEACH RECON WIRED GAMING CONTROLLER
+            </div>
+            <div class="separator"></div>
+            <div class="product-price">
+                Rs. 65,39
+                
+            </div>
+            <div class="product-rating">
+                <i class="far fa-star" data-rating="1"></i>
+                <i class="far fa-star" data-rating="2"></i>
+                <i class="far fa-star" data-rating="3"></i>
+                <i class="far fa-star" data-rating="4"></i>
+                <i class="far fa-star" data-rating="5"></i>
+                <span>
+                    No reviews
+                </span>
+            </div>
+            <div class="product-description">
+                <ul>
+                    <li>12M Cache, up to 4.30 GHz</li>
+                    <li>4 Cores - 8 Threads</li>
+                    <li>12 MB Intel® Smart Cache</li>
+                    <li>Memory Types: Up to DDR5 4800 MT/s Up to DDR4 3200 MT/s</li>
+                </ul>
+            </div>
+            <div class="quantity-section">
+                <div class="quantity-control">
+                    <button id="decrease-quantity">-</button>
+                    <input type="text" id="quantity" value="1" />
+                    <button id="increase-quantity">+</button>
+                </div>
+                <button class="add-to-cart">
+                    Add To Cart
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </div>
+            <div class="additional-options">
+                <a href="#" id="wishlist" class="wishlist">
+                    <i class="far fa-heart"></i> Add to Wishlist
+                </a>
+            </div>
+            <div class="separator"></div>
+            <div class="product-info">
+                <div>
+                    <i class="fas fa-shield-alt"></i>
+                    2 years warranty
+                </div>
+                <div>
+                    <i class="fas fa-truck"></i>
+                    Delivery time: 1-2 business days
+                </div>
+                <div>
+                    <i class="fas fa-undo"></i>
+                    Free 90 days return
+                </div>
+            </div>
+            <div class="payment-options">
+                <img alt="PayPal" height="30"
+                    src="https://storage.googleapis.com/a1aa/image/yPJUDN6vbFItFJFLhcO2jSQZdFu8DsY7jWwlqfhgnNkLyz4JA.jpg"
+                    width="50" />
+                <img alt="Visa" height="30"
+                    src="https://storage.googleapis.com/a1aa/image/HFufcMfHPgncEkMYoyNhTrSEWRjMPC1bkN9yAMt902USknxTA.jpg"
+                    width="50" />
+                <img alt="MasterCard" height="30"
+                    src="https://storage.googleapis.com/a1aa/image/piVerEdP691fYEQ6mP59fxYXEWE32AHxQpgjU1dzQOdhIPjnA.jpg"
+                    width="50" />
+                <img alt="Skrill" height="30"
+                    src="https://storage.googleapis.com/a1aa/image/JYWoVArQkwJAFZSeeGxi6Royd7zCTjDT4hBuvYZ6dX5RknxTA.jpg"
+                    width="50" />
+            </div>
+            <div class="categories">
+                Categories: CPUs, Deal Hot, Gaming Controllers, Gaming Headsets, Gaming Mouse, Home page, Monitors
+            </div>
+            <div class="tags">
+                Tags: abc, Deal Hot, xyz
+            </div>
+            <div class="social-icons">
+                <a href="#">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#">
+                    <i class="fab fa-pinterest"></i>
+                </a>
+                <a href="#">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>
+        const images = [
+            "https://storage.googleapis.com/a1aa/image/n1bUA39ejhV4HaQOu2Ro2vUDDD4zuhR5egzfNQRdK8qpIPjnA.jpg",
+            "https://storage.googleapis.com/a1aa/image/fsWSaO3nepoitEpX2vHdZ0uhdH75oh6pnfUFLex7hD3XReMeE.jpg",
+            "https://storage.googleapis.com/a1aa/image/ci6CRfP6y3SMNiizSzqRBLuT3b4ttyF1wt1JfAv4cHlPknxTA.jpg",
+            "https://storage.googleapis.com/a1aa/image/jwQZIRG9f014NyT0WKd3n93S2y2eeBanqDmVnjmoVzVwIPjnA.jpg"
+        ];
+        let currentImageIndex = 0;
+
+        function updateMainImage(index) {
+            const mainImage = document.getElementById('main-image');
+            mainImage.src = images[index];
+        }
+
+        document.querySelectorAll('.thumbnail-images img').forEach((thumbnail, index) => {
+            thumbnail.addEventListener('click', () => {
+                currentImageIndex = index;
+                updateMainImage(index);
+            });
+        });
+
+        document.querySelector('.arrow-left').addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            updateMainImage(currentImageIndex);
+        });
+
+        document.querySelector('.arrow-right').addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            updateMainImage(currentImageIndex);
+        });
+
+        document.querySelectorAll('.product-rating i').forEach(star => {
+            star.addEventListener('mouseover', function () {
+                const rating = this.getAttribute('data-rating');
+                document.querySelectorAll('.product-rating i').forEach(s => {
+                    if (s.getAttribute('data-rating') <= rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+
+            star.addEventListener('click', function () {
+                const rating = this.getAttribute('data-rating');
+                document.querySelectorAll('.product-rating i').forEach(s => {
+                    if (s.getAttribute('data-rating') <= rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        document.querySelector('.product-rating').addEventListener('mouseleave', function () {
+            document.querySelectorAll('.product-rating i').forEach(s => {
+                s.classList.remove('active');
+            });
+        });
+
+        document.getElementById('wishlist').addEventListener('click', function (e) {
+            e.preventDefault();
+            this.classList.toggle('active');
+            if (this.classList.contains('active')) {
+                this.innerHTML = '<i class="fas fa-heart"></i> Added to Wishlist';
+            } else {
+                this.innerHTML = '<i class="far fa-heart"></i> Add to Wishlist';
+            }
+        });
+
+        document.getElementById('increase-quantity').addEventListener('click', function () {
+            const quantityInput = document.getElementById('quantity');
+            let quantity = parseInt(quantityInput.value);
+            quantityInput.value = quantity + 1;
+        });
+
+        document.getElementById('decrease-quantity').addEventListener('click', function () {
+            const quantityInput = document.getElementById('quantity');
+            let quantity = parseInt(quantityInput.value);
+            if (quantity > 1) {
+                quantityInput.value = quantity - 1;
+            }
+        });
+    </script>
+</body>
+
+</html>

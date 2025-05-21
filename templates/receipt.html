@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Order Confirmation Email</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- Start Common CSS -->
+    <style>
+        /* Center the logo and heading */
+        .email-header {
+            display: flex;
+            justify-content: center; /* Center logo and heading horizontally */
+            align-items: center; /* Align logo and heading vertically */
+            text-align: center;
+            margin : 20px auto;/* Add space below the header */
+            gap: 10px;
+            
+        }
+        .logo-container {
+            margin : 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .logo-box {
+            max-width: 38px;
+            max-height: 38px;
+            background-color: var(--color-background-hover);
+            border: 2px solid var(--color-info-light);
+            border-radius: 10px;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+    
+        .logo {
+            width: 32px;
+            height: 32px;
+        }
+    
+        /* Style for the email container */
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+    
+        /* Style for content and footer */
+        .content, .footer {
+            text-align: left; /* Align content and footer text to the left */
+        }
+    
+        .footer {
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+    
+        .blue {
+            color: rgb(92, 121, 252); /* Styling the "ify" part of Techify */
+        }
+        #outlook a {
+            padding: 0;
+        }
+
+        body {
+            width: 100% !important;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Helvetica, arial, sans-serif;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        .ExternalClass,
+        .ExternalClass p,
+        .ExternalClass span,
+        .ExternalClass font,
+        .ExternalClass td,
+        .ExternalClass div {
+            line-height: 100%;
+        }
+
+        .backgroundTable {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            line-height: 100% !important;
+        }
+
+        .main-temp table {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+            font-family: Helvetica, arial, sans-serif;
+        }
+
+        .main-temp table td {
+            border-collapse: collapse;
+        }
+    </style>
+    <!-- End Common CSS -->
+</head>
+
+<body>
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="backgroundTable main-temp"
+        style="background-color: #d5d5d5;">
+        <tbody>
+            <tr>
+                <td>
+                    <table width="600" align="center" cellpadding="15" cellspacing="0" border="0" class="devicewidth"
+                        style="background-color: #ffffff;">
+                        <tbody>
+                            <!-- Start header Section -->
+                            <tr>
+                                <td style="padding-top: 30px;">
+                                    <table width="560" align="center" cellpadding="0" cellspacing="0" border="0"
+                                        class="devicewidthinner"
+                                        style="border-bottom: 1px solid #eeeeee; text-align: center;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding-bottom: 10px;">
+                                                    <div class="email-header">
+                                                        <div class="logo-container">
+                                                            <div class="logo-box">
+                                                            <img src="https://res.cloudinary.com/ditkr99ht/image/upload/v1732222624/logo_w8ukrg.png"
+                                                                alt="Logo" class="logo">
+                                                            </div>
+                                                            <h2>Tech<span class="blue">ify</span></h2>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">
+                                                    Shop 154, Ground Floor, Naz Plaza, Saddar
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">
+                                                    Karachi, Karachi City, Sindh
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">
+                                                    Phone: 0310-8076672 | Email: techifyb4u@gmail.com
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666; padding-bottom: 25px;">
+                                                    <strong>Order Number:</strong> {{ order_id }} | <strong>Order Date:</strong> {{ created_at }}
+                                                </td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- End header Section -->
+
+                            <!-- Start address Section -->
+                            <tr>
+                                <td style="padding-top: 0;">
+                                    <table width="560" align="center" cellpadding="0" cellspacing="0" border="0"
+                                        class="devicewidthinner" style="border-bottom: 1px solid #bbbbbb;">
+                                        <tbody>
+                                            <tr>
+                                                <td
+                                                    style="width: 55%; font-size: 16px; font-weight: bold; color: #666666; padding-bottom: 5px;">
+                                                    Delivery Adderss
+                                                </td>
+                                                <td
+                                                    style="width: 45%; font-size: 16px; font-weight: bold; color: #666666; padding-bottom: 5px;">
+                                                    Billing Address
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">{{ shipping['street'] }}</td>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">{{ billing['street'] }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">{{ shipping['city'] }}, {{ shipping['state'] }}</td>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">{{ billing['city'] }}, {{ billing['state'] }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">{{ shipping['postal_code'] }}, {{ shipping['country'] }}</td>
+                                                <td style="font-size: 14px; line-height: 18px; color: #666666;">{{ billing['postal_code'] }}, {{ billing['country'] }}</td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- End address Section -->
+
+                            <!-- Start product Section -->
+                            {% for item in products %}
+                            <tr>
+                                <td style="padding-top: 0;">
+                                    <table width="560" align="center" cellpadding="0" cellspacing="0" border="0"
+                                        class="devicewidthinner" style="border-bottom: 1px solid #eeeeee;">
+                                        <tbody>
+                                            <tr>
+                                                <td rowspan="4" style="padding-right: 10px; padding-bottom: 10px;">
+                                                    <img style="height: 80px;" src="{{ item.image_url }}"
+                                                        alt="Product Image" />
+                                                </td>
+                                                <td colspan="2"
+                                                    style="font-size: 14px; font-weight: bold; color: #666666; padding-bottom: 5px;">
+                                                    {{ item.name }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td
+                                                    style="font-size: 14px; line-height: 18px; color: #757575; width: 440px;">
+                                                    Quantity: {{ item.quantity }}
+                                                </td>
+                                                <td style="width: 130px;"></td>
+                                            </tr>
+                                            <tr>
+                                                
+                                                <td
+                                                    style="font-size: 14px; line-height: 18px; color: #757575; text-align: right;">
+                                                    Price: PKR {{ item.price }}</td> Per Unit
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                
+                                                <td
+                                                    style="font-size: 14px; line-height: 18px; color: #757575; text-align: right; padding-bottom: 10px;">
+                                                    <b style="color: #666666;">Total: PKR {{ item.total }}</b>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                            
+                            <!-- End product Section -->
+
+                           <!-- Start calculation Section -->
+                           <tr>
+                            <td style="padding-top: 0;">
+                                <table width="560" align="center" cellpadding="0" cellspacing="0" border="0"
+                                    class="devicewidthinner"
+                                    style="border-bottom: 1px solid #bbbbbb; margin-top: -5px;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="font-size: 14px; line-height: 18px; color: #666666;">Sub-Total:</td>
+                                            <td style="text-align: right;">PKR {{ subtotal }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="font-size: 14px; line-height: 18px; color: #666666;">Tax (2%):</td>
+                                            <td style="text-align: right;">PKR {{ tax }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="font-size: 14px; line-height: 18px; color: #666666;">Shipping Fee:</td>
+                                            <td style="text-align: right;">PKR {{ shipping_fee }}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td style="font-size: 14px; font-weight: bold; line-height: 18px; color: #666666;">Order Total:</td>
+                                            <td style="text-align: right; font-weight: bold;">PKR {{ order_total }}</td>
+                                        </tr>
+                                        
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- End calculation Section -->
+
+                        <!-- Start payment method Section -->
+                        <tr>
+                            <td style="padding: 0 10px;">
+                                <table width="560" align="center" cellpadding="0" cellspacing="0" border="0"
+                                    class="devicewidthinner">
+                                    <tbody>
+                                        <tr>
+                                            <td style="font-size: 16px; font-weight: bold; color: #666666;">Payment Method:</td>
+                                            <td>{{ payment_method }}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td colspan="2"
+                                                style="width: 100%; text-align: center; font-style: italic; font-size: 13px; font-weight: 600; color: #666666; padding: 15px 0; border-top: 1px solid #eeeeee;">
+                                                <b style="font-size: 14px;">Note:</b> 
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- End payment method Section -->
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</body>
+
+</html>

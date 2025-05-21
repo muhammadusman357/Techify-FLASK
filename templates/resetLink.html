@@ -1,0 +1,35 @@
+{%  extends 'home-base.html' %}
+{% block title %} Recovery Code {% endblock %}
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div id="flash-messages" class="flash-container">
+        {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+<div class="login-container">            
+    
+        <h1>Password Reset Code</h1>
+    
+    <form class="forms" method="POST">
+        <label for="code">Code</label>
+        <div class="input-group"><input type="text" placeholder="code" name="reset_code" required></div>
+        <button type="submit" class="login-btn"> Verify Code</button>
+    </form>
+    
+</div>
+
+<script>
+    // Auto-hide flash messages after 5 seconds
+    setTimeout(function() {
+        const flashMessages = document.getElementById('flash-messages');
+        if (flashMessages) {
+            flashMessages.style.display = 'none';
+        }
+    }, 3000); // 5000 ms = 5 seconds
+</script>
+{% endblock %}

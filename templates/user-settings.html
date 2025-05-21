@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <title>
+        User Information Page
+    </title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .sidebar a:hover {
+            color: #e3342f;
+        }
+    </style>
+</head>
+
+<body class="flex bg-gray-100">
+    <div class="sidebar w-64 bg-black text-white h-screen p-6 fixed">
+        <h2 class="text-2xl font-bold mb-6">
+            User Dashboard
+        </h2>
+        <ul>
+            <li class="mb-4">
+                <a class="text-lg hover:text-red-500" href="#personal-info">
+                    <i class="fas fa-user mr-2">
+                    </i>
+                    Personal Info
+                </a>
+            </li>
+            <li class="mb-4">
+                <a class="text-lg hover:text-red-500" href="#wishlist">
+                    <i class="fas fa-heart mr-2">
+                    </i>
+                    Wishlist
+                </a>
+            </li>
+            <li class="mb-4">
+                <a class="text-lg hover:text-red-500" href="#order-history">
+                    <i class="fas fa-history mr-2">
+                    </i>
+                    Order History
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="content flex-grow p-8 ml-64">
+        <div class="mb-12" id="personal-info">
+            <h2 class="text-3xl font-bold mb-6">
+                Personal Information
+               </h2>
+            <form id="user-info-form">
+                <div class="form-group mb-6">
+                    <label class="block text-lg font-medium mb-2" for="first-name">First Name</label>
+                    <input class="w-full p-3 border border-gray-300 rounded-lg" id="first-name" name="first_name"
+                        type="text" value="{{ user.first_name }}" />
+                </div>
+                <div class="form-group mb-6">
+                    <label class="block text-lg font-medium mb-2" for="last-name">Last Name</label>
+                    <input class="w-full p-3 border border-gray-300 rounded-lg" id="last-name" name="last_name"
+                        type="text" value="{{ user.last_name }}" />
+                </div>
+                <div class="form-group mb-6">
+                    <label class="block text-lg font-medium mb-2" for="phone-number">Phone Number</label>
+                    <input class="w-full p-3 border border-gray-300 rounded-lg" id="phone-number" name="phone_number"
+                        type="text" value="{{ user.phone_number }}" />
+                </div>
+                <button type="button" onclick="updateUser()"
+                    class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-black">Save</button>
+            </form>
+        </div>
+        <script>
+            function updateUser() {
+                const formData = new FormData(document.getElementById('user-info-form'));
+                fetch('/update-user', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('User updated successfully');
+                        } else {
+                            alert('Error updating user: ' + data.error);
+                        }
+                    });
+            }
+        </script>
+        <div class="mb-12" id="wishlist">
+            <h2 class="text-3xl font-bold mb-6">Wishlist</h2>
+            <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for wishlist_item, product in wishlist_items %}
+                <li class="bg-white p-4 rounded-lg shadow-md">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-32 object-cover rounded-lg mb-4">
+                    <p class="text-lg font-medium">{{ product.name }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="order-history">
+            <h2 class="text-3xl font-bold mb-6">
+                Order History
+               </h2>
+            <ul class="space-y-6">
+                {% for order in orders %}
+                <li class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-lg font-medium">Order #{{ order.order_id }}</p>
+                    <p class="text-gray-600">Date: {{ order.created_at.strftime('%Y-%m-%d') }}</p>
+                    <p class="text-gray-600">Total: Rs {{ order.total_price }}</p>
+                    <p class="text-gray-600">Status: {{ order.status }}</p>
+                    <ul class="mt-4 space-y-2">
+                        {% for item in order.order_items %}
+                        <li>{{ item.quantity }}x {{ item.product.name }} (Rs {{ item.price_at_purchase }})</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

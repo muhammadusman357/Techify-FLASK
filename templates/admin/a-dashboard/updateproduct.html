@@ -1,0 +1,142 @@
+{%  extends '/admin/a-dashboard/base_sidebar.html' %}
+{% block head %}
+{% endblock %}
+
+{% block title %}
+{{selected}}
+{% endblock %}
+
+{% block content %}
+<div class="products">
+  <h1>Update Product</h1>
+  <form method="POST" action="{{ url_for('updateproduct', product_id=product.product_id) }}"
+    enctype="multipart/form-data">
+    <!-- Hidden input to hold the product ID -->
+    <input type="hidden" name="product_id" value="{{ product.product_id }}">
+
+    <div class="form-group">
+      <div class="form-group-half">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" value="{{ product.name }}" />
+      </div>
+      <div class="form-group-half">
+        <label for="price">Price</label>
+        <input id="price" name="price" type="text" value="{{ product.price }}" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-group-half">
+        <label for="cost_price">Cost Price</label>
+        <input id="cost_price" name="cost_price" type="text" value="{{ product.cost_price }}" />
+      </div>
+    </div>
+
+    
+    <div class="form-group">
+      <div class="form-group-half">
+        <label for="vendor">Vendor</label>
+        <select id="vendor" name="vendor">
+          <option>-- select any option --</option>
+          {% for vendor in vendors %}
+          <option value="{{ vendor.vendor_id }}" {% if vendor.vendor_id==product.vendor_id %} selected {% endif %}>
+            {{ vendor.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group-half">
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          <option>-- select any option --</option>
+          {% for category in categories %}
+          <option value="{{ category.category_id }}" {% if category.category_id==product.category_id %} selected {%
+            endif %}>
+            {{ category.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-group-half">
+        <label for="stock">Stock</label>
+        <input id="stock" name="stock" type="text" value="{{ product.stock }}" />
+      </div>
+      <div class="form-group-half">
+        <label for="images">Images</label>
+        <div class="form-group-images">
+          <label for="images">
+            <i class="fas fa-upload"></i> Choose product images
+          </label>
+          <input id="images" multiple name="image" type="file" accept="image/*" onchange="previewImages(event)" />
+        </div>
+
+        <!-- Display current product images with a remove option -->
+        <div class="current-images">
+          <h4>Existing Images</h4>
+          <div class="image-preview" id="imagePreview">
+            {% for image in product.images %}
+              
+            <div class="existing-image" id="image-{{ image.id }}">
+                <!-- Use Cloudinary image URLs -->
+                <div class="product-pic" onclick="showPopup1('{{ image.image_url }}')">
+                  <img src="{{ image.image_url }}" alt="{{ product.name }}" class="product-photo">
+              </div>
+            
+                <label class="remove-label">
+                  
+                    <input type="checkbox" name="keep_image[]" value="{{ image.id }}" checked onclick="removeImage('{{ image.id }}', this)">
+                    <span class="material-symbols-outlined">delete</span>
+                </label>
+            </div>
+            <div class="overlay" onclick="hidePopup()"></div>
+              <div class="popup1" id="popup1">
+                <span class="close-btn2" onclick="hidePopup()">&times;</span>
+                <img id="popupImage" src="" alt="{{ product.name }}" class="product-photo">
+            </div> 
+            {% endfor %}
+            
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-group-full">
+        <label for="description">Description</label>
+        <textarea id="description" name="description">{{ product.description }}</textarea>
+      </div>
+    </div>
+
+    <button class="btn btn-back" type="button" onclick="history.back()">Back</button>
+    <button class="btn" type="submit">Update Product</button>
+  </form>
+</div>
+
+<script>
+function showPopup1(imageUrl) {
+  const popupImage = document.getElementById('popupImage');
+  popupImage.src = imageUrl;
+  document.getElementById('popup1').style.display = 'block';
+}
+
+function hidePopup() {
+  document.getElementById('popup1').style.display = 'none';
+}
+
+function removeImage(imageId, checkbox) {
+  const imageElement = document.getElementById(`image-${imageId}`);
+  if (!checkbox.checked) {
+    imageElement.style.opacity = 0.5;  // Visual indication that the image is being removed
+  } else {
+    imageElement.style.opacity = 1;
+  }
+}
+</script>
+
+{% endblock %}
+
+{% block content2 %}
+{% endblock %}
